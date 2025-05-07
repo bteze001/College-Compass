@@ -19,19 +19,26 @@ const CollegeCompassDash = () => {
   return (
     <div className="profile-container">
 
-      {/* User info section with Edit Profile button */}
+      {/* Logo and Edit Profile button */}
+      <div className="dashboard-header">
+        <img src="/college-compasslogo.png" alt="College Compass Logo" className="dashboard-logo" />
+        <button className="edit-profile-button">Edit Profile</button>
+      </div>
+
+      {/* User info section */}
       <div className="user-info">
-        <div className="user-container">
-          <div className="user">
-            <div className="user-head"></div>
-            <div className="user-body"></div>
+        <div className="user-left">
+          <div className="user-container">
+            <div className="user">
+              <div className="user-head"></div>
+              <div className="user-body"></div>
+            </div>
+          </div>
+          <div className="user-details">
+            <div className="username">Username</div>
+            <div className="user-email">visitor@ucr.edu</div>
           </div>
         </div>
-        <div className="user-details">
-          <div className="username">Username</div>
-          <div className="user-email">visitor@ucr.edu</div>
-        </div>
-        <button className="edit-profile-button">Edit Profile</button>
       </div>
 
       {/* Tab Navigation */}

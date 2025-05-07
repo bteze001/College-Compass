@@ -154,4 +154,23 @@
   }
   
 
+  .dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 16px 8px;
+    margin-bottom: 8px;
+  }
+  .dashboard-logo {
+    width: 180px;
+    height: auto;
+    object-fit: contain;
+  }
+  
+  
+  .user-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
   
