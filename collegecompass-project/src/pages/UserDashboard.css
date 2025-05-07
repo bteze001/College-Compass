@@ -126,4 +126,32 @@
     text-align: center;
     color: #6b7280;
   }
+  .user-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    margin-bottom: 32px;
+    max-width: 100%;
+  }
+  
+  .user-details {
+    flex-grow: 1;
+  }
+  .edit-profile-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #e5e7eb;
+    border: 2px solid #d1d5db;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .edit-profile-button:hover {
+    background-color: #d1d5db;
+  }
+  
+
   

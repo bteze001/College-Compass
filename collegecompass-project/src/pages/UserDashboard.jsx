@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Trash } from 'lucide-react';
 import './UserDashboard.css';
-import AccountSettings from './AccountSettings'; // ← new import
+import AccountSettings from './AccountSettings';
 
 const CollegeCompassDash = () => {
   const [activeTab, setActiveTab] = useState('favorites');
@@ -18,6 +18,8 @@ const CollegeCompassDash = () => {
 
   return (
     <div className="profile-container">
+
+      {/* User info section with Edit Profile button */}
       <div className="user-info">
         <div className="user-container">
           <div className="user">
@@ -25,10 +27,11 @@ const CollegeCompassDash = () => {
             <div className="user-body"></div>
           </div>
         </div>
-        <div>
+        <div className="user-details">
           <div className="username">Username</div>
           <div className="user-email">visitor@ucr.edu</div>
         </div>
+        <button className="edit-profile-button">Edit Profile</button>
       </div>
 
       {/* Tab Navigation */}
