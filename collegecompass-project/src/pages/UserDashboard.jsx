@@ -1,26 +1,23 @@
 import React, { useState } from 'react';
 import { Trash } from 'lucide-react';
 import './UserDashboard.css';
+import AccountSettings from './AccountSettings'; // ← new import
 
 const CollegeCompassDash = () => {
-
-  //active tab will keep track of which tab the user is on - default is favorites
   const [activeTab, setActiveTab] = useState('favorites');
-  //temp vals, we will need to get them from the database eventually 
+
   const [favorites, setFavorites] = useState([
     { id: 1, name: 'Place Name', rating: 3 },
     { id: 2, name: 'Place Name', rating: 4 },
     { id: 3, name: 'Place Name', rating: 3 }
   ]);
 
-  //delete func, for the trash button
   const handleDelete = (id) => {
     setFavorites(favorites.filter(place => place.id !== id));
   };
 
   return (
     <div className="profile-container">
-       {/* User info section with placeholder person -  name/email */}
       <div className="user-info">
         <div className="user-container">
           <div className="user">
@@ -33,7 +30,8 @@ const CollegeCompassDash = () => {
           <div className="user-email">visitor@ucr.edu</div>
         </div>
       </div>
-     {/*Tab buttons: 3 tabs: favorites/reviews and the account settings*/}
+
+      {/* Tab Navigation */}
       <div className="tabs">
         <div className="tab-buttons">
           <div 
@@ -48,15 +46,20 @@ const CollegeCompassDash = () => {
           >
             <span className="tab-label">My Reviews</span>
           </div>
+          <div 
+            className={`tab ${activeTab === 'settings' ? 'active' : ''}`}
+            onClick={() => setActiveTab('settings')}
+          >
+            <span className="tab-label">Account Settings</span>
+          </div>
         </div>
       </div>
-        {/* Favorites, only shown if the favorites is the active tab*/}
+
+      {/* My Favorites */}
       {activeTab === 'favorites' && (
         <div className="favorites-list">
-          {/* Render each fav place */}
           {favorites.map((place) => (
             <div key={place.id} className="favorite-item">
-                {/* add icon, name, and star rating */}
               <div className="place-info">
                 <div className="place-icon">
                   <svg className="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -65,7 +68,6 @@ const CollegeCompassDash = () => {
                 </div>
                 <div>
                   <div className="place-name">{place.name}</div>
-                   {/* Display star rating*/}
                   <div className="stars">
                     {Array.from({ length: 5 }).map((_, i) => (
                       <span key={i} className="star">
@@ -75,7 +77,6 @@ const CollegeCompassDash = () => {
                   </div>
                 </div>
               </div>
-              {/* Delete button to remove the place from favorites */}
               <button onClick={() => handleDelete(place.id)} className="delete-button">
                 <Trash color="#B91C1C" size={24} />
               </button>
@@ -83,11 +84,17 @@ const CollegeCompassDash = () => {
           ))}
         </div>
       )}
-       {/* Same thing we did for favorites:  Reviews content, only shown if reviews tab is the active one*/}
+
+      {/* My Reviews */}
       {activeTab === 'reviews' && (
         <div className="reviews-placeholder">
           Your reviews will appear here
         </div>
+      )}
+
+      {/* Account Settings */}
+      {activeTab === 'settings' && (
+        <AccountSettings />
       )}
     </div>
   );
