@@ -23,7 +23,7 @@ class SearchFilter {
         //filter places by checking if their place is between the minprice and the maxprice
         return places.filter (place => {
 
-            const price = place.price || place.PriceRange;
+            const price = place.price;
 
             return price >= minPrice && price <= maxPrice;
         });
