@@ -10,7 +10,11 @@
   top: 0;
   left: 0;
   width: 100%;
-  background-color: #ffffff;  
+  background-color: #ffffff;
+  /* background-image: url('./assets/ucr_campus.png'); 
+  background-size: cover;  
+  background-position: center;  
+  background-repeat: no-repeat; */
   z-index: 999;
   padding-bottom: 230px; 
   pointer-events: none; 
@@ -48,29 +52,32 @@
   font-size: 14pt;
   border: 1px;
   border-radius: 6px;
-  background-color: #dedddd;
+  background-color: #f3e8ff;
+  color: #6b21a8;
+  font-weight: bold;
   cursor: pointer;
 }
 
 .login-button.login-button:hover {
-  color: #ffffff;
+  background-color: #e9d5ff;
 }
 
 .sign-up-button {
   position: fixed;
   top: 10px;
-  right: 20px;
+  right: 15px;
   padding: 8px 16px;
   font-size: 14pt;
   border: none;
   border-radius: 6px;
   background-color: #292828;
   color: white;
+  font-weight: bold;
   cursor: pointer;
 }
 
 .sign-up-button.sign-up-button:hover {
-  color: #acacac;
+  background-color: #d1d5db;
 }
 
 .dashboard-button {
@@ -82,14 +89,15 @@
   border: none;
   border-radius: 6px;
   border: 1px solid;
-  border-color: #000000;
+  border-color: #d1d5db;
   background-color: #ffffff;
   color: #000000;
+  font-weight: bold;
   cursor: pointer;
 }
 
 .dashboard-button.dashboard-button:hover {
-  background-color: #9a9a9a;
+  background-color: #d1d5db;
 }
 
 .food-spots-button {
@@ -102,14 +110,15 @@
   border: none;
   border-radius: 6px;
   border: 1px solid;
-  border-color: #000000;
-  background-color: #ffffff;
-  color: #000000;
+  border-color: #d1d5db;
+  background-color: #f3e8ff;
+  color: #6b21a8;
+  font-weight: bold;
   cursor: pointer;
 }
 
 .food-spots-button.food-spots-button:hover {
-  background-color:#cfcfcf;
+  background-color:#e9d5ff;
 }
 
 .housing-button {
@@ -122,14 +131,15 @@
   border: none;
   border-radius: 6px;
   border: 1px solid;
-  border-color: #000000;
-  background-color: #ffffff;
-  color: #000000;
+  border-color: #d1d5db;
+  background-color: #f3e8ff;
+  color: #6b21a8;
+  font-weight: bold;
   cursor: pointer;
 }
 
 .housing-button.housing-button:hover {
-  background-color:#cfcfcf;
+  background-color:#e9d5ff;
 }
 
 .activities-button {
@@ -143,42 +153,43 @@
   border: none;
   border-radius: 6px;
   border: 1px solid;
-  border-color: #000000;
-  background-color: #ffffff;
-  color: #000000;
+  border-color: #d1d5db;
+  background-color: #f3e8ff;
+  color: #6b21a8;
+  font-weight: bold;
   cursor: pointer;
 }
 
 .activities-button.activities-button:hover {
-  background-color:#cfcfcf;
+  background-color:#e9d5ff;
 }
 
 .filter-button {
   position: fixed;
   top: 180px;
-  right: 50px;
-  width: 250px;
+  right: 100px;
+  width: 150px;
   height: 40px;
-  font-size: 24px;
+  font-size: 20px;
   border: none;
   border-radius: 6px;
   border: 1px solid;
-  border-color: #000000;
-  background-color: #a6a6a6;
-  color: #000000;
+  border-color: #d1d5db;
+  background-color: #f3e8ff;
+  color: #6b21a8;
+  font-weight: bold;
   cursor: pointer;
 }
 
 .filter-button.filter-button:hover {
-  color: #ffffff;
-  border-color: #ffffff;
+  background-color: #e9d5ff;
 }
 
 .places-container {
   margin-top: 50px; /*changes the distance between slider distance and places */
   display: flex;
   justify-content: center;
-  gap: 180px;
+  gap: 100px;
   flex-wrap: wrap;
 }
 
@@ -187,9 +198,13 @@
   flex-direction: column;
   align-items: center;
   background: #ffffff;
-  border: 2px solid;
+  border: 1px solid #d1d5db;
   height: 300px;
   width: 300px;
+}
+
+.places-box.places-box:hover {
+  box-shadow: 0 6px 12px rgba(124, 124, 124, 0.2);
 }
 
 .places-button-text {
@@ -215,7 +230,7 @@
   display: block;
   width: 250px;
   height: 200px;
-  border: 1px solid;
+  border: 1px solid #d1d5db;
 }
 
 .places-button.places-button:hover {
@@ -261,11 +276,12 @@
   height: 40px;
   font-size: 24px;
   color: #000000;
-  border: 1px solid #000000;
+  border: 1px solid #d1d5db;
   border-radius: 6px;
   outline: none;
   padding-left: 48px; 
   transition: border-color 0.2s ease-in-out;
+  box-shadow: 0 5px 12px rgba(179, 179, 179, 0.2), 0 -5px 12px rgba(179, 179, 179, 0.2);
 }
 
 .search-icon {

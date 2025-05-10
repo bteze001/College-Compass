@@ -6,6 +6,7 @@ import locationIcon from './assets/location_on.png';
 import coffeeShop from './assets/coffee_shop_inside.jpg';
 import pizzaPlace from './assets/pizza_place.jpg';
 import breakfastSpot from './assets/breakfast_spot.jpg';
+import ucrCampus from './assets/ucr_campus.png'
 import './App.css';
 import { Slider } from '@mui/material';
 
@@ -53,15 +54,15 @@ export default function App() {
 
       <div className="category-buttons">
 
-        <button className="food-spots-button" onClick={() => navigate('/foodspots')}>
+        <button className="food-spots-button" onClick={() => navigate('/food')}>
           Food 
         </button>
 
-        <button className="activities-button" onClick={() => navigate('/housing')}>
+        <button className="activities-button" onClick={() => navigate('/activities')}>
           Activites
         </button>
 
-        <button className="housing-button" onClick={() => navigate('/activites')}>
+        <button className="housing-button" onClick={() => navigate('/housing')}>
           Housing
         </button>
 
@@ -137,34 +138,34 @@ export default function App() {
         <div className="places-container">
 
           <div className="places-box">
-            <button className="places-button" onClick={() => navigate('/places1')}>
+            <button className="places-button" onClick={() => navigate('/coffeeshop')}>
               <img src={coffeeShop} className="places-button-icon" />
               <span className="places-button-text">Coffee Shop</span>
             </button>
 
-            <button className="places-location-button" onClick={() => navigate('places1/location')}>
+            <button className="places-location-button" onClick={() => navigate('coffeeshop/location')}>
               <span className="location-button-text">Location</span>
             </button>
           </div>
 
           <div className="places-box">
-            <button className="places-button" onClick={() => navigate('/places2')}>
+            <button className="places-button" onClick={() => navigate('/pizzaplace')}>
               <img src={pizzaPlace} className="places-button-icon" />
               <span className="places-button-text">Pizza Place</span>
             </button>
 
-            <button className="places-location-button" onClick={() => navigate('places2/location')}>
+            <button className="places-location-button" onClick={() => navigate('pizzaplace/location')}>
               <span className="location-button-text">Location</span>
             </button>
           </div>
 
           <div className="places-box">
-              <button className="places-button" onClick={() => navigate('/places3')}>
+              <button className="places-button" onClick={() => navigate('/breakfastspot')}>
                 <img src={breakfastSpot} className="places-button-icon" />
                 <span className="places-button-text">Breakfast Spot</span>
               </button>
 
-              <button className="places-location-button" onClick={() => navigate('places3/location')}>
+              <button className="places-location-button" onClick={() => navigate('breakfastspot/location')}>
                 <span className="location-button-text">Location</span>
               </button>     
           </div>
