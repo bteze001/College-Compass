@@ -1,0 +1,63 @@
+[
+    {
+      "name": "UC Berkeley",
+      "fullName": "University of California, Berkeley",
+      "latitude": 37.8700,
+      "longitude": -122.2500
+    },
+    {
+      "name": "UC Davis",
+      "fullName": "University of California, Davis",
+      "latitude": 38.5373,
+      "longitude": -121.7500
+    },
+    {
+      "name": "UC Irvine",
+      "fullName": "University of California, Irvine",
+      "latitude": 33.6405,
+      "longitude": -117.8390
+    },
+    {
+      "name": "UCLA",
+      "fullName": "University of California, Los Angeles",
+      "latitude": 34.0707,
+      "longitude": -118.4401
+    },
+    {
+      "name": "UC Merced",
+      "fullName": "University of California, Merced",
+      "latitude": 37.3660,
+      "longitude": -120.4235
+    },
+    {
+      "name": "UC Riverside",
+      "fullName": "University of California, Riverside",
+      "latitude": 33.9534,
+      "longitude": -117.3962
+    },
+    {
+      "name": "UC San Diego",
+      "fullName": "University of California, San Diego",
+      "latitude": 32.8753,
+      "longitude": -117.2361
+    },
+    {
+      "name": "UC San Francisco",
+      "fullName": "University of California, San Francisco",
+      "latitude": 37.7626,
+      "longitude": -122.4587
+    },
+    {
+      "name": "UC Santa Barbara",
+      "fullName": "University of California, Santa Barbara",
+      "latitude": 34.4140,
+      "longitude": -119.8489
+    },
+    {
+      "name": "UC Santa Cruz",
+      "fullName": "University of California, Santa Cruz",
+      "latitude": 37.0000,
+      "longitude": -122.0600
+    }
+  ]
+  
