@@ -1,10 +1,12 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // ⬅️ Add this
 import "./searchSchool.css";
 import ExploreIcon from "@mui/icons-material/Explore";
-import logo from "../assets/logo.png"; // adjust path to your logo
+import logo from "../assets/logo.png";
 
 function SearchSchool({ placeholder, data }) {
   const [filteredData, setFilteredData] = useState([]);
+  const navigate = useNavigate(); // ⬅️ Use this to redirect
 
   const handleFilter = (event) => {
     const searchWord = event.target.value;
@@ -21,8 +23,12 @@ function SearchSchool({ placeholder, data }) {
       <div className="topBar">
         <div></div>
         <div className="authButtons">
-          <button className="authBtn">Log In</button>
-          <button className="authBtn dark">Sign Up</button>
+          <button className="authBtn" onClick={() => navigate("/login")}>
+            Log In
+          </button>
+          <button className="authBtn dark" onClick={() =>navigate("/login", { state: { mode: "register" } })}>
+            Sign Up
+          </button>
         </div>
       </div>
 

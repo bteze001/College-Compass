@@ -1,15 +1,24 @@
 import './App.css';
-//import Landing from './pages/landing';
-import SearchSchool from './pages/searchSchool';
-import SchoolData from './Data.json'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+import SearchSchool from './pages/searchSchool'; // your landing page
+import Login from './pages/Login';
+import SchoolData from './Data.json';
 
 function App() {
   return (
-    <div className="App">
-      <SearchSchool placeholder="Find a school..." data={SchoolData}/>
-    </div>
+    <Router>
+      <div className="App">
+        <Routes>
+          <Route
+            path="/"
+            element={<SearchSchool placeholder="Find a school..." data={SchoolData} />}
+          />
+          <Route path="/login" element={<Login />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
 export default App;
-
