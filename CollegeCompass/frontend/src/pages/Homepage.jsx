@@ -11,6 +11,8 @@ import breakfastSpot from '../assets/breakfast_spot.jpg';
 import ucrCampus from '../assets/ucr_campus.png'
 import './Homepage.css';
 import { Slider } from '@mui/material';
+import { Link } from 'react-router-dom';
+
 
 export default function Homepage() {
   const navigate = useNavigate();
@@ -48,7 +50,7 @@ export default function Homepage() {
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
-      navigate(`/search?q=${encodeURIComponent(query)}`);
+      filterBySearchQuery();
     }
   };
 
@@ -71,6 +73,31 @@ export default function Homepage() {
   const filterFastFoods = () => {
     setShowFastFoods(!showFastFoods)
   }
+
+  const filterBySearchQuery = () => {
+    const lowercaseQuery = query.toLowerCase();
+
+    if (category === 'food') {
+      const filtered = foodPlaces.filter(place =>
+        place.name.toLowerCase().includes(lowercaseQuery)
+      );
+      setFoodPlaces(filtered);
+    }
+  
+    if (category === 'housing') {
+      const filtered = housingPlaces.filter(place =>
+        place.name.toLowerCase().includes(lowercaseQuery)
+      );
+      setHousingPlaces(filtered);
+    }
+  
+    if (category === 'activity') {
+      const filtered = activityPlaces.filter(place =>
+        place.name.toLowerCase().includes(lowercaseQuery)
+      );
+      setActivityPlaces(filtered);
+    }
+  };
 
   const fetchHousing = useCallback(async () => {
 
@@ -297,7 +324,18 @@ export default function Homepage() {
     if (category === 'food' && foodPlaces.length > 0) {
       return foodPlaces.map((place) => (
         <div key={place.fsq_id} className="places-box">
-          <h3>{place.name}</h3>
+          {place.photos && place.photos[0] && (
+            <img
+              src={`${place.photos[0].prefix}original${place.photos[0].suffix}`}
+              alt={place.name}
+              className="place-photo"
+            />
+          )}
+          <h3>
+            <Link to={`/places/${place.fsq_id}`} className='places-name-button'>
+              {place.name}
+            </Link>
+          </h3>
           <p>{place.location.address || "Address not available"}</p>
           {place.categories && place.categories[0] && (
             <p className="category-tag">{place.categories[0].name}</p>
@@ -309,7 +347,18 @@ export default function Homepage() {
     if (category === 'housing' && housingPlaces.length > 0) {
       return housingPlaces.map((place) => (
         <div key={place.fsq_id} className="places-box housing-box">
-          <h3>{place.name}</h3>
+          {place.photos && place.photos[0] && (
+            <img
+              src={`${place.photos[0].prefix}original${place.photos[0].suffix}`}
+              alt={place.name}
+              className="place-photo"
+            />
+          )}
+          <h3>
+            <Link to={`/places/${place.fsq_id}`} className='places-name-button'>
+              {place.name}
+            </Link>
+          </h3>
           <p>{place.location.address || "Address not available"}</p>
           {place.categories && place.categories[0] && (
             <p className="category-tag">{place.categories[0].name}</p>
@@ -321,7 +370,18 @@ export default function Homepage() {
     if (category === 'activity' && activityPlaces.length > 0) {
       return activityPlaces.map((place) => (
         <div key={place.fsq_id} className="places-box activity-box">
-          <h3>{place.name}</h3>
+          {place.photos && place.photos[0] && (
+            <img
+              src={`${place.photos[0].prefix}original${place.photos[0].suffix}`}
+              alt={place.name}
+              className="place-photo"
+            />
+          )}
+          <h3>
+            <Link to={`/places/${place.fsq_id}`} className='places-name-button'>
+              {place.name}
+            </Link>
+          </h3>
           <p>{place.location.address || "Address not available"}</p>
           {place.categories && place.categories[0] && (
             <p className="category-tag">{place.categories[0].name}</p>
