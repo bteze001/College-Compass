@@ -294,9 +294,21 @@ export default function Homepage() {
       return <div className="error-message">{error}</div>;
     }
 
+
+    //Takes the place object and converts to a string and saves to localstorage
+    const handlePlaceClick = (place) => {
+      localStorage.setItem('selectedPlace', JSON.stringify(place));
+      navigate(`/place/${place.fsq_id}`);
+    };
+
     if (category === 'food' && foodPlaces.length > 0) {
       return foodPlaces.map((place) => (
-        <div key={place.fsq_id} className="places-box">
+        <div 
+          key={place.fsq_id} 
+          className="places-box"
+          onClick={() => handlePlaceClick(place)}
+          style={{ cursor: 'pointer' }} // Add pointer cursor
+        >
           <h3>{place.name}</h3>
           <p>{place.location.address || "Address not available"}</p>
           {place.categories && place.categories[0] && (
@@ -308,7 +320,12 @@ export default function Homepage() {
 
     if (category === 'housing' && housingPlaces.length > 0) {
       return housingPlaces.map((place) => (
-        <div key={place.fsq_id} className="places-box housing-box">
+        <div 
+          key={place.fsq_id} 
+          className="places-box housing-box"
+          onClick={() => handlePlaceClick(place)}
+          style={{ cursor: 'pointer' }}
+        >
           <h3>{place.name}</h3>
           <p>{place.location.address || "Address not available"}</p>
           {place.categories && place.categories[0] && (
@@ -320,7 +337,12 @@ export default function Homepage() {
 
     if (category === 'activity' && activityPlaces.length > 0) {
       return activityPlaces.map((place) => (
-        <div key={place.fsq_id} className="places-box activity-box">
+        <div 
+          key={place.fsq_id} 
+          className="places-box activity-box"
+          onClick={() => handlePlaceClick(place)}
+          style={{ cursor: 'pointer' }}
+        >
           <h3>{place.name}</h3>
           <p>{place.location.address || "Address not available"}</p>
           {place.categories && place.categories[0] && (
