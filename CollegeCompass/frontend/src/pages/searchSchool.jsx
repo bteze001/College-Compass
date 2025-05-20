@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import "./searchSchool.css";
 import ExploreIcon from "@mui/icons-material/Explore";
-import logo from "../assets/logo.png"; // adjust path to your logo
+import logo from "../assets/logo_1.png" // adjust path to your logo
+import { useNavigate } from "react-router-dom";
 
 function SearchSchool({ placeholder, data }) {
   const [filteredData, setFilteredData] = useState([]);
+  const navigate = useNavigate();
 
   const handleFilter = (event) => {
     const searchWord = event.target.value;
@@ -45,7 +47,7 @@ function SearchSchool({ placeholder, data }) {
             />
           </div>
 
-          {filteredData.length !== 0 && (
+          {/* {filteredData.length !== 0 && (
             <div className="schoolSelection">
               {filteredData.map((value, key) => (
                 <a
@@ -58,6 +60,34 @@ function SearchSchool({ placeholder, data }) {
                   <p>{value.fullName}</p>
                 </a>
               ))}
+            </div>
+          )} */}
+
+          {filteredData.length !== 0 && (
+            <div className="schoolSelection">
+              {filteredData.map((value, key) => {
+                return (
+                  <div
+                    className="schoolData"
+                    onClick={() => {
+                      console.log(`Selected School: ${value.fullName}`);
+                      console.log(`Latitude: ${value.latitude}, Longitude: ${value.longitude}`);
+
+
+                      navigate("/homepage", {
+                        state: {
+                          schoolName: value.fullName,
+                          lat: value.latitude,
+                          lng: value.longitude,
+                        },
+                      });
+                    }}
+                    key={key}
+                  >
+                    <p>{value.fullName}</p>
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>

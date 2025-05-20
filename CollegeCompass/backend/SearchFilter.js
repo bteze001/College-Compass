@@ -4,13 +4,19 @@ class SearchFilter {
         
         // Loop through each place and keep if it pass distance check 
         return places.filter ((place) => {
-
-            // Extract the coordinates 
-            const {lat, lon} = place;
             
-            //Calculate distance 
-            const dis = SearchFilter.haversine(userLat, userLon, lat, lon);
-            return dis <= maxDistance;
+            // Extract the coordinates 
+           const lat = place.geocodes?.main?.latitude;
+           const lon = place.geocodes?.main?.longitude;
+
+           if(lat == null || lon == null) {
+            return false;
+           }
+            //Calculate distance (distance returned by haversine is in Km so we convert it to miles)
+            const disKm = SearchFilter.haversine(userLat, userLon, lat, lon);
+            const distMi = disKm * 0.621371;
+
+            return distMi <= maxDistance;
         });
     }
 
@@ -18,9 +24,7 @@ class SearchFilter {
 
         //filter places by checking if their place is between the minprice and the maxprice
         return places.filter ((place) => {
-
-            const price = place.price;
-
+            const price = place.price ?? 1;
             return price >= minPrice && price <= maxPrice;
         });
     }
@@ -53,4 +57,4 @@ class SearchFilter {
     }
 }
 
-module.exports = SearchFilter;
+export default SearchFilter;
