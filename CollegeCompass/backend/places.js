@@ -1,6 +1,5 @@
 //This page handles api calls to fetch places based on their category and users location 
 // and caches all the fetched data to reduce api calls
-
 import {useState, useRef, useEffect} from 'react'
 import axios from 'axios'
 

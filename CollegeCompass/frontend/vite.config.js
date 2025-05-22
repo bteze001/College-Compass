@@ -13,4 +13,12 @@ export default defineConfig({
       },
     },
   },
+  test: {
+    environment: 'jsdom',
+    setupFiles:['./setup.js'],
+    globals: true,
+    coverage: {
+      reporter: ['text', 'html'],
+    },
+  },
 })

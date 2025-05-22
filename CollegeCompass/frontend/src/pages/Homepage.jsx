@@ -23,9 +23,10 @@ export default function Homepage() {
   const [housingPlaces, setHousingPlaces] = useState([]);
   const [activityPlaces, setActivityPlaces] = useState([]);
 
+  // Get coordinates from the landing page, if it fails use UCR as default 
   const { lat: passedLat, lng: passedLon, schoolName } = location.state || {};
-  const defaultLat = 33.9741;
-  const defaultLon = -117.3281;
+  const defaultLat = 33.97372;
+  const defaultLon = -117.32807;
 
   const currentLat = passedLat ?? defaultLat;
   const currentLon = passedLon ?? defaultLon;
@@ -156,5 +157,4 @@ export default function Homepage() {
     </>
   );
 }
-
 

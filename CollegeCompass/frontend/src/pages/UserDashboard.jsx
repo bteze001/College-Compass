@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Trash } from 'lucide-react';
-import logo from '../assets/logo.png';
+import { Link } from 'react-router-dom'; // ✅ added for routing
 import './UserDashboard.css';
 import AccountSettings from './AccountSettings';
+import logo from '../assets/logo.png';
 
 const CollegeCompassDash = () => {
   const [activeTab, setActiveTab] = useState('favorites');
@@ -23,7 +24,9 @@ const CollegeCompassDash = () => {
       {/* Logo and Edit Profile button */}
       <div className="dashboard-header">
         <img src={logo} alt="College Compass Logo" className="dashboard-logo" />
-        <button className="edit-profile-button">Edit Profile</button>
+        <Link to="/edit-profile">
+          <button className="edit-profile-button">Edit Profile</button>
+        </Link>
       </div>
 
       {/* User info section */}

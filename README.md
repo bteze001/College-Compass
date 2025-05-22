@@ -1,1 +1,1 @@
-# CS180_Project
+# CollegeCompass: UC-Me

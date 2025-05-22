@@ -4,13 +4,19 @@
     padding: 2rem;
     text-align: center;
   }
+
+  body, html {
+    background-color: #eef5ff;
+  }
   
   .fixed-header {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    background-color: #ffffff;
+    background-color: #eef5ff;
+    /* background-color: #ffffff; */
+
     /* background-image: url('./assets/ucr_campus.png'); 
     background-size: cover;  
     background-position: center;  

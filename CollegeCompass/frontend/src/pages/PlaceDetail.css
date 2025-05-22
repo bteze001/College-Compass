@@ -1,0 +1,306 @@
+.place-detail-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.place-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-top: 10px;
+}
+
+.back-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  background-color: #f3e8ff;
+  color: #6b21a8;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.back-button:hover {
+  background-color: #e9d5ff;
+}
+
+.place-detail-content {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 30px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-top: 30px;
+}
+
+.place-name {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: #111827;
+}
+
+.place-category {
+  margin-bottom: 20px;
+}
+
+.category-tag {
+  display: inline-block;
+  padding: 6px 14px;
+  background-color: #f3e8ff;
+  color: #6b21a8;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 20px;
+}
+
+.place-address {
+  margin-bottom: 25px;
+  color: #4b5563;
+  line-height: 1.5;
+}
+
+.place-photos {
+  margin-bottom: 35px;
+}
+
+.place-main-photo {
+  width: 100%;
+  max-height: 500px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.place-no-photo {
+  height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f3f4f6;
+  color: #6b7280;
+  border-radius: 8px;
+  margin-bottom: 35px;
+  font-size: 16px;
+}
+
+.rating-section {
+  margin-top: 40px;
+}
+
+.rating-section h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e5e7eb;
+  color: #111827;
+}
+
+.average-rating {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.stars {
+  display: flex;
+}
+
+.star {
+  font-size: 24px;
+  cursor: default;
+  transition: color 0.2s;
+}
+
+.star.filled {
+  color: #ffb400;
+}
+
+.star.empty {
+  color: #d4d4d4;
+}
+
+.stars.interactive .star {
+  cursor: pointer;
+}
+
+.star.hover {
+  color: #ffc933;
+}
+
+.user-rating-section {
+  background-color: #f9fafb;
+  padding: 25px;
+  border-radius: 8px;
+  margin-bottom: 35px;
+}
+
+.user-rating-section h3 {
+  margin-bottom: 20px;
+  font-size: 20px;
+  color: #111827;
+}
+
+.login-link {
+  color: #6b21a8;
+  cursor: pointer;
+  font-weight: 500;
+  text-decoration: underline;
+}
+
+.login-link:hover {
+  color: #581c87;
+}
+
+.comment-section {
+  margin: 20px 0;
+}
+
+.comment-input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 14px;
+  resize: vertical;
+  transition: border-color 0.2s;
+}
+
+.comment-input:focus {
+  outline: none;
+  border-color: #6b21a8;
+}
+
+.submit-rating-button {
+  padding: 10px 20px;
+  background-color: #6b21a8;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.submit-rating-button:hover {
+  background-color: #581c87;
+}
+
+.submit-rating-button:disabled {
+  background-color: #d1d5db;
+  cursor: not-allowed;
+}
+
+.rating-message {
+  margin-top: 15px;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: #f0fdf4;
+  color: #166534;
+  border-left: 4px solid #10b981;
+}
+
+.reviews-section {
+  margin-top: 40px;
+}
+
+.reviews-section h3 {
+  margin-bottom: 20px;
+  font-size: 20px;
+  color: #111827;
+}
+
+.reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.review-item {
+  padding: 20px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background-color: #fff;
+  transition: box-shadow 0.2s;
+}
+
+.review-item:hover {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.review-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.reviewer-name {
+  font-weight: 600;
+  color: #111827;
+}
+
+.review-rating .star {
+  font-size: 18px;
+}
+
+.review-date {
+  color: #6b7280;
+  font-size: 14px;
+  margin-left: auto;
+}
+
+.review-comment {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #374151;
+}
+
+@media (max-width: 768px) {
+  .place-detail-container {
+    padding: 15px;
+  }
+  
+  .place-detail-content {
+    padding: 20px;
+  }
+  
+  .place-name {
+    font-size: 26px;
+  }
+  
+  .review-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+  
+  .review-date {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .average-rating {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+  
+  .place-name {
+    font-size: 22px;
+  }
+  
+  .submit-rating-button {
+    width: 100%;
+  }
+}

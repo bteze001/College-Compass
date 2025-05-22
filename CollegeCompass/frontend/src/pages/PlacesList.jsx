@@ -1,13 +1,42 @@
 import coffeeShops from '../assets/coffeeShop.webp';
 import park from '../assets/park.webp';
+import { useNavigate } from 'react-router-dom';
+
+const campusBounds = {
+    "UCR": {
+        latMin: 33.970,
+        latMax: 33.980,
+        lonMin: -117.336,
+        lonMax: -117.320
+    },
+    "UCLA": {
+        latMin: 34.067,
+        latMax: 34.079,
+        lonMin: -118.452,
+        lonMax: -118.436
+    },
+    "UCD": {
+
+    }, 
+    
+}
 
 export default function PlacesList({ category, foodPlaces, housingPlaces,
                                     activityPlaces, currentLat, currentLon,
                                     distance, budget, SearchFilter,
                                     selectedFoodType, selectedHousingType, selectedActivityType }) {
 
+    const navigate = useNavigate();
+
+     //Takes the place object and converts to a string and saves to localstorage
+    const handlePlaceClick = (place) => {
+        localStorage.setItem('selectedPlace', JSON.stringify(place));
+        navigate(`/place/${place.fsq_id}`);
+    };
+
     const minPrice = 1;
-    /* $1-25: 1 (cheap)
+    /* convert budget to a price level fetched from the API 
+       $1-25: 1 (cheap)
        $26-50: 2(moderate)
        $51-75: 3(expensive)
        $76-100: 4(very expensive)
@@ -15,9 +44,12 @@ export default function PlacesList({ category, foodPlaces, housingPlaces,
     const maxPrice = Math.min(4, Math.ceil(budget / 25));
 
     if (category === 'food') {
+        
+        //Filter by distance and budget
         let filtered = SearchFilter.applyDistanceFilter(foodPlaces, currentLat, currentLon, distance);
         filtered = SearchFilter.applyBudgetFilter(filtered, minPrice, maxPrice);
 
+        // Filter by food type using the food categories fetched from API 
         if(selectedFoodType && selectedFoodType !== 'all') {
             filtered = filtered.filter((place) => {
                 const placeCategory = place.categories?.[0]?.name?.toLowerCase() || '';
@@ -25,7 +57,8 @@ export default function PlacesList({ category, foodPlaces, housingPlaces,
                 if(selectedFoodType === 'coffee') {
                     return (
                         placeCategory.includes('coffee') ||
-                        placeCategory.includes('café')
+                        placeCategory.includes('café') ||
+                        placeCategory.includes('bubble tea')
                     );
                 }
 
@@ -33,6 +66,7 @@ export default function PlacesList({ category, foodPlaces, housingPlaces,
                     return (
                         placeCategory.includes('burger') ||
                         placeCategory.includes('fried chicken') ||
+                        placeCategory.includes('hot dog') ||
                         placeCategory.includes('fast food')
                     );
                 }
@@ -41,9 +75,13 @@ export default function PlacesList({ category, foodPlaces, housingPlaces,
                     const words = placeCategory.split(' ');
                     const lastWord = words[words.length - 1];
                     return (
-                        placeCategory.includes('deli') ||
+                        !placeCategory.includes('fast food') &&
+                        (placeCategory.includes('deli') ||
                         placeCategory.includes('pub') ||
-                        lastWord === 'restaurant'
+                        placeCategory.includes('steak') ||
+                        placeCategory.includes('diner') ||
+                        placeCategory.includes('restaurant'))
+                       // lastWord === 'restaurant'
                     );
                 }
 
@@ -51,6 +89,7 @@ export default function PlacesList({ category, foodPlaces, housingPlaces,
             });
         }
 
+        // Display the filtered food places 
         return filtered.map((place) => {
             const placeCategory = place.categories?.[0]?.name?.toLowerCase() || "";
             const isCoffeeShop = placeCategory.includes('coffee') || placeCategory.includes('café');
@@ -58,7 +97,10 @@ export default function PlacesList({ category, foodPlaces, housingPlaces,
            // console.log(`${place.name} - ${place.distance} meters`);
 
             return (
-                <div key={place.fsq_id} className="places-box">
+                <div key={place.fsq_id} 
+                    className="places-box"
+                    onClick={() => handlePlaceClick(place)}
+                    style = {{ cursor: 'pointer' }}>
                     {/* {isCoffeeShop && (<img src={coffeeShops} alt="place" className="place-image" />)} */}
                     <h3>{place.name}</h3>
                     <p>{place.location.address || "Address not available"}</p>
@@ -84,15 +126,18 @@ export default function PlacesList({ category, foodPlaces, housingPlaces,
 
                 if(selectedHousingType === 'dorms') {
                     return (
-                        placeCategory.includes('college') ||
-                        placeCategory.includes('hall')
+                        (placeCategory.includes('college') ||
+                        placeCategory.includes('hall')) && 
+                        place.distance / 1609 <= 1
                     );
                 }
 
                 if(selectedHousingType === 'apartments') {
                     return (
-                        placeCategory.includes('apartment') ||
-                        placeCategory.includes('condo')
+                        (placeCategory.includes('apartment') ||
+                        placeCategory.includes('condo') ||
+                        placeCategory.includes('college')) && 
+                        place.distance /1609 > 1
                     );
                 }
 
@@ -102,7 +147,10 @@ export default function PlacesList({ category, foodPlaces, housingPlaces,
         }
 
         return filtered.map((place) => (
-            <div key={place.fsq_id} className="places-box housing-box">
+            <div key={place.fsq_id} 
+                className="places-box housing-box"
+                onClick={() => handlePlaceClick(place)}
+                style = {{ cursor: 'pointer' }}>
                 <h3>{place.name}</h3>
                 <p>{place.location.address || "Address not available"}</p>
                 {place.categories && place.categories[0] && (
@@ -160,7 +208,10 @@ export default function PlacesList({ category, foodPlaces, housingPlaces,
             const isPark = placeCategory.includes("park");
 
             return (
-                <div key={place.fsq_id} className="places-box activity-box">
+                <div key={place.fsq_id} 
+                    className="places-box activity-box"
+                    onClick={() => handlePlaceClick(place)}
+                    style = {{ cursor: 'pointer' }}>
                     {/* {isPark && (<img src={park} alt="place" className='place-image' />)} */}
                     <h3>{place.name}</h3>
                     <p>{place.location.address || "Address not available"}</p>
