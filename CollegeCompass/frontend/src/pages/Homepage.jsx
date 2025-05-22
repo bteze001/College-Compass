@@ -307,7 +307,7 @@ export default function Homepage() {
           key={place.fsq_id} 
           className="places-box"
           onClick={() => handlePlaceClick(place)}
-          style={{ cursor: 'pointer' }} // Add pointer cursor
+          style={{ cursor: 'pointer' }} 
         >
           <h3>{place.name}</h3>
           <p>{place.location.address || "Address not available"}</p>
