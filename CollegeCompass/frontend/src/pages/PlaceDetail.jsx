@@ -151,7 +151,7 @@ export default function PlaceDetail() {
     }
   };
 
-  // If out websitre doesn’t have the place info yet -> displays a loading message
+  // If out website doesn’t have the place info yet -> displays a loading message
   if (!place) {
     return (
       <div className="place-detail-container">

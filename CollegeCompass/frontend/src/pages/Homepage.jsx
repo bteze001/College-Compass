@@ -4,6 +4,8 @@ import axios from 'axios';
 import logo from '../assets/logo.png';
 import coffeeShops from '../assets/coffee_shop.webp';
 import compass from '../assets/compass.png';
+import search from '../assets/search-icon.png';
+import placeholder from '../assets/place-hold.jpg';
 import locationIcon from '../assets/location_on.png';
 import coffeeShop from '../assets/coffee_shop_inside.jpg';
 import pizzaPlace from '../assets/pizza_place.jpg';
@@ -11,6 +13,8 @@ import breakfastSpot from '../assets/breakfast_spot.jpg';
 import ucrCampus from '../assets/ucr_campus.png'
 import './Homepage.css';
 import { Slider } from '@mui/material';
+import { Link } from 'react-router-dom';
+
 
 export default function Homepage() {
   const navigate = useNavigate();
@@ -48,7 +52,7 @@ export default function Homepage() {
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
-      navigate(`/search?q=${encodeURIComponent(query)}`);
+      filterBySearchQuery();
     }
   };
 
@@ -71,6 +75,31 @@ export default function Homepage() {
   const filterFastFoods = () => {
     setShowFastFoods(!showFastFoods)
   }
+
+  const filterBySearchQuery = () => {
+    const lowercaseQuery = query.toLowerCase();
+
+    if (category === 'food') {
+      const filtered = foodPlaces.filter(place =>
+        place.name.toLowerCase().includes(lowercaseQuery)
+      );
+      setFoodPlaces(filtered);
+    }
+  
+    if (category === 'housing') {
+      const filtered = housingPlaces.filter(place =>
+        place.name.toLowerCase().includes(lowercaseQuery)
+      );
+      setHousingPlaces(filtered);
+    }
+  
+    if (category === 'activity') {
+      const filtered = activityPlaces.filter(place =>
+        place.name.toLowerCase().includes(lowercaseQuery)
+      );
+      setActivityPlaces(filtered);
+    }
+  };
 
   const fetchHousing = useCallback(async () => {
 
@@ -303,13 +332,26 @@ export default function Homepage() {
 
     if (category === 'food' && foodPlaces.length > 0) {
       return foodPlaces.map((place) => (
-        <div 
-          key={place.fsq_id} 
-          className="places-box"
+        <div
+          key={place.fsq_id}
+          className="places-box places-name-button"
           onClick={() => handlePlaceClick(place)}
-          style={{ cursor: 'pointer' }} 
+          style={{ cursor: 'pointer' }}
         >
-          <h3>{place.name}</h3>
+          <img
+            src={
+              place.photos?.[0]
+                ? `${place.photos[0].prefix}original${place.photos[0].suffix}`
+                : placeholder
+            }
+            alt={place.name}
+            className="place-photo"
+          />
+          <h3>
+            <Link to={`/places/${place.fsq_id}`} className="places-name-button" onClick={(e) => e.stopPropagation()}>
+              {place.name}
+            </Link>
+          </h3>
           <p>{place.location.address || "Address not available"}</p>
           {place.categories && place.categories[0] && (
             <p className="category-tag">{place.categories[0].name}</p>
@@ -317,16 +359,30 @@ export default function Homepage() {
         </div>
       ));
     }
+    
 
     if (category === 'housing' && housingPlaces.length > 0) {
       return housingPlaces.map((place) => (
-        <div 
-          key={place.fsq_id} 
+        <div
+          key={place.fsq_id}
           className="places-box housing-box"
-          onClick={() => handlePlaceClick(place)}
           style={{ cursor: 'pointer' }}
+          onClick={() => handlePlaceClick(place)}
         >
-          <h3>{place.name}</h3>
+          <img
+            src={
+              place.photos?.[0]
+                ? `${place.photos[0].prefix}original${place.photos[0].suffix}`
+                : placeholder
+            }
+            alt={place.name}
+            className="place-photo"
+          />
+          <h3>
+            <Link to={`/places/${place.fsq_id}`} className="places-name-button" onClick={(e) => e.stopPropagation()}>
+              {place.name}
+            </Link>
+          </h3>
           <p>{place.location.address || "Address not available"}</p>
           {place.categories && place.categories[0] && (
             <p className="category-tag">{place.categories[0].name}</p>
@@ -334,16 +390,29 @@ export default function Homepage() {
         </div>
       ));
     }
-
+    
     if (category === 'activity' && activityPlaces.length > 0) {
       return activityPlaces.map((place) => (
-        <div 
-          key={place.fsq_id} 
+        <div
+          key={place.fsq_id}
           className="places-box activity-box"
-          onClick={() => handlePlaceClick(place)}
           style={{ cursor: 'pointer' }}
+          onClick={() => handlePlaceClick(place)}
         >
-          <h3>{place.name}</h3>
+          <img
+            src={
+              place.photos?.[0]
+                ? `${place.photos[0].prefix}original${place.photos[0].suffix}`
+                : placeholder
+            }
+            alt={place.name}
+            className="place-photo"
+          />
+          <h3>
+            <Link to={`/places/${place.fsq_id}`} className="places-name-button" onClick={(e) => e.stopPropagation()}>
+              {place.name}
+            </Link>
+          </h3>
           <p>{place.location.address || "Address not available"}</p>
           {place.categories && place.categories[0] && (
             <p className="category-tag">{place.categories[0].name}</p>
@@ -351,6 +420,7 @@ export default function Homepage() {
         </div>
       ));
     }
+    
 
     return <p>Click a category to see nearby places.</p>;
 
@@ -392,14 +462,20 @@ export default function Homepage() {
 
         <div className="search-bar-wrapper">
           <img src={compass} alt="Search Icon" className="search-icon" />
-          <input
-            type="text"
-            value={query}
-            onChange={handleChange}
-            onKeyDown={handleKeyDown}
-            className="search-input"
-            placeholder="Search..."
-          />
+          <div className='search-input-wrapper'>
+            <input
+              type="text"
+              value={query}
+              onChange={handleChange}
+              onKeyDown={handleKeyDown}
+              className="search-input"
+              placeholder="Search..."
+            />
+
+            <button onClick={filterBySearchQuery} className='search-button'>
+              <img src={search} alt="search" className="search-button-image" />
+            </button>
+          </div>
         </div>
 
         <button className="filter-button" onClick={toggleFilters}>
