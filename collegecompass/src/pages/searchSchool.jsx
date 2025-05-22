@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // ⬅️ Add this
+import { useNavigate } from "react-router-dom";
 import "./searchSchool.css";
 import ExploreIcon from "@mui/icons-material/Explore";
 import logo from "../assets/logo.png";
 
 function SearchSchool({ placeholder, data }) {
   const [filteredData, setFilteredData] = useState([]);
-  const navigate = useNavigate(); // ⬅️ Use this to redirect
+  const navigate = useNavigate();
 
   const handleFilter = (event) => {
     const searchWord = event.target.value;
@@ -20,18 +20,23 @@ function SearchSchool({ placeholder, data }) {
 
   return (
     <div className="landingPage">
+      {/* Top Bar with Auth Buttons */}
       <div className="topBar">
         <div></div>
         <div className="authButtons">
           <button className="authBtn" onClick={() => navigate("/login")}>
             Log In
           </button>
-          <button className="authBtn dark" onClick={() =>navigate("/login", { state: { mode: "register" } })}>
+          <button
+            className="authBtn dark"
+            onClick={() => navigate("/login?register=true")}
+          >
             Sign Up
           </button>
         </div>
       </div>
 
+      {/* Center Content */}
       <div className="centerContent">
         <img src={logo} alt="College Compass Logo" className="logoLarge" />
 
