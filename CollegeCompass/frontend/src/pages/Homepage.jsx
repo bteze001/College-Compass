@@ -4,6 +4,8 @@ import axios from 'axios';
 import logo from '../assets/logo.png';
 import coffeeShops from '../assets/coffee_shop.webp';
 import compass from '../assets/compass.png';
+import search from '../assets/search-icon.png';
+import placeholder from '../assets/place-hold.jpg';
 import locationIcon from '../assets/location_on.png';
 import coffeeShop from '../assets/coffee_shop_inside.jpg';
 import pizzaPlace from '../assets/pizza_place.jpg';
@@ -324,13 +326,15 @@ export default function Homepage() {
     if (category === 'food' && foodPlaces.length > 0) {
       return foodPlaces.map((place) => (
         <div key={place.fsq_id} className="places-box">
-          {place.photos && place.photos[0] && (
-            <img
-              src={`${place.photos[0].prefix}original${place.photos[0].suffix}`}
-              alt={place.name}
-              className="place-photo"
-            />
-          )}
+          <img
+            src={
+              place.photos?.[0]
+                ? `${place.photos[0].prefix}original${place.photos[0].suffix}`
+                : placeholder
+            }
+            alt={place.name}
+            className="place-photo"
+          />
           <h3>
             <Link to={`/places/${place.fsq_id}`} className='places-name-button'>
               {place.name}
@@ -347,13 +351,15 @@ export default function Homepage() {
     if (category === 'housing' && housingPlaces.length > 0) {
       return housingPlaces.map((place) => (
         <div key={place.fsq_id} className="places-box housing-box">
-          {place.photos && place.photos[0] && (
-            <img
-              src={`${place.photos[0].prefix}original${place.photos[0].suffix}`}
-              alt={place.name}
-              className="place-photo"
-            />
-          )}
+          <img
+            src={
+              place.photos?.[0]
+                ? `${place.photos[0].prefix}original${place.photos[0].suffix}`
+                : placeholder
+            }
+            alt={place.name}
+            className="place-photo"
+          />
           <h3>
             <Link to={`/places/${place.fsq_id}`} className='places-name-button'>
               {place.name}
@@ -370,13 +376,15 @@ export default function Homepage() {
     if (category === 'activity' && activityPlaces.length > 0) {
       return activityPlaces.map((place) => (
         <div key={place.fsq_id} className="places-box activity-box">
-          {place.photos && place.photos[0] && (
-            <img
-              src={`${place.photos[0].prefix}original${place.photos[0].suffix}`}
-              alt={place.name}
-              className="place-photo"
-            />
-          )}
+          <img
+            src={
+              place.photos?.[0]
+                ? `${place.photos[0].prefix}original${place.photos[0].suffix}`
+                : placeholder
+            }
+            alt={place.name}
+            className="place-photo"
+          />
           <h3>
             <Link to={`/places/${place.fsq_id}`} className='places-name-button'>
               {place.name}
@@ -430,14 +438,20 @@ export default function Homepage() {
 
         <div className="search-bar-wrapper">
           <img src={compass} alt="Search Icon" className="search-icon" />
-          <input
-            type="text"
-            value={query}
-            onChange={handleChange}
-            onKeyDown={handleKeyDown}
-            className="search-input"
-            placeholder="Search..."
-          />
+          <div className='search-input-wrapper'>
+            <input
+              type="text"
+              value={query}
+              onChange={handleChange}
+              onKeyDown={handleKeyDown}
+              className="search-input"
+              placeholder="Search..."
+            />
+
+            <button onClick={filterBySearchQuery} className='search-button'>
+              <img src={search} alt="search" className="search-button-image" />
+            </button>
+          </div>
         </div>
 
         <button className="filter-button" onClick={toggleFilters}>
