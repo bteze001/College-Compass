@@ -24,9 +24,9 @@ const CollegeCompassDash = () => {
       {/* Logo and Edit Profile button */}
       <div className="dashboard-header">
         <img src={logo} alt="College Compass Logo" className="dashboard-logo" />
-        <Link to="/edit-profile">
+        {/* <Link to="/edit-profile">
           <button className="edit-profile-button">Edit Profile</button>
-        </Link>
+        </Link> */}
       </div>
 
       {/* User info section */}

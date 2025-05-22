@@ -4,9 +4,11 @@ import usePlacesFetcher from '../../../backend/places';
 import FilterSliders from './FilterSliders';
 import PlacesList from './PlacesList';
 import SearchFilter from '../../../backend/SearchFilter';
+import search from '../assets/search-icon.png';
 import logo from '../assets/logo.png';
 import compass from '../assets/compass.png';
 import './Homepage.css';
+import { Link } from 'react-router-dom';
 
 export default function Homepage() {
   const navigate = useNavigate();
@@ -39,7 +41,8 @@ export default function Homepage() {
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
-      navigate(`/search?q=${encodeURIComponent(query)}`);
+      //navigate(`/search?q=${encodeURIComponent(query)}`);
+      filterBySearchQuery();
     }
   };
 
@@ -51,7 +54,34 @@ export default function Homepage() {
     setBudget(value);
   };
 
-  const toggleFilters = () => setshowFilters(!showFilters);
+  const toggleFilters = () => {
+    setshowFilters(!showFilters);
+  }
+
+  const filterBySearchQuery = () => {
+    const lowercaseQuery = query.toLowerCase();
+
+    if (category === 'food') {
+      const filtered = foodPlaces.filter(place =>
+        place.name.toLowerCase().includes(lowercaseQuery)
+      );
+      setFoodPlaces(filtered);
+    }
+  
+    if (category === 'housing') {
+      const filtered = housingPlaces.filter(place =>
+        place.name.toLowerCase().includes(lowercaseQuery)
+      );
+      setHousingPlaces(filtered);
+    }
+  
+    if (category === 'activity') {
+      const filtered = activityPlaces.filter(place =>
+        place.name.toLowerCase().includes(lowercaseQuery)
+      );
+      setActivityPlaces(filtered);
+    }
+  };
 
   const handleFoodFetch = async () => {
     setCategory('food');
@@ -102,6 +132,7 @@ export default function Homepage() {
 
         <div className="search-bar-wrapper">
           <img src={compass} alt="Search Icon" className="search-icon" />
+          <div className='search-input-wrapper'>
           <input
             type="text"
             value={query}
@@ -110,6 +141,10 @@ export default function Homepage() {
             className="search-input"
             placeholder="Search..."
           />
+          <button onClick={filterBySearchQuery} className='search-button'>
+              <img src={search} alt="search" className="search-button-image" />
+            </button>
+          </div>
         </div>
 
         <button className="filter-button" onClick={toggleFilters}>
