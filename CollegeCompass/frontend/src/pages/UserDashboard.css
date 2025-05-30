@@ -1,6 +1,6 @@
 /*Overall layout section*/
 .profile-container {
-  max-width: 900px;
+  /* max-width: 900px; */
   margin: 0 auto;
   padding: 16px;
   font-family: sans-serif;
@@ -46,8 +46,8 @@
   margin-top: 4px;
 }
 
-.username {
-  font-size: 20px;
+.username_dashboard {
+  font-size: 25px;
   font-weight: bold;
 }
 
@@ -138,19 +138,20 @@
   flex-grow: 1;
 }
 
-.edit-profile-button {
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #e5e7eb;
-  border: 2px solid #d1d5db;
-  border-radius: 10px;
+.edit-icon {
+  border-radius: 6px;
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  font-size: 12pt;
+  border: 1px;
+  color: #6b21a8;
+  margin-left: 10px;
+  margin-top: 10px;
 }
 
 .edit-profile-button:hover {
-  background-color: #d1d5db;
+  background-color: #e9d5ff;
 }
 
 .dashboard-header {
@@ -216,6 +217,7 @@
   border-radius: 8px;
   background-color: #f9fafb;
   color: #6b7280;
+  width: 500px;
 }
 
 .setting-button {
@@ -231,4 +233,14 @@
 
 .setting-button:hover {
   background-color: #e9d5ff;
+}
+
+.save-button {
+
+  background-color: rgb(128, 70, 211);
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  color: white;
+  margin-left: 10px;
 }

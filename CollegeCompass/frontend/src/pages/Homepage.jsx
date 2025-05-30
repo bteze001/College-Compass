@@ -1,50 +1,44 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import logo from '../assets/logo.png';
-import coffeeShops from '../assets/coffee_shop.webp';
-import compass from '../assets/compass.png';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import usePlacesFetcher from '../../../backend/places';
+import FilterSliders from './FilterSliders';
+import PlacesList from './PlacesList';
+import SearchFilter from '../../../backend/SearchFilter';
+import useCurrentUser from './useCurrentUser';
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+import {User} from 'lucide-react'
 import search from '../assets/search-icon.png';
-import placeholder from '../assets/place-hold.jpg';
-import locationIcon from '../assets/location_on.png';
-import coffeeShop from '../assets/coffee_shop_inside.jpg';
-import pizzaPlace from '../assets/pizza_place.jpg';
-import breakfastSpot from '../assets/breakfast_spot.jpg';
-import ucrCampus from '../assets/ucr_campus.png'
+import logo from '../assets/logo.png';
+import compass from '../assets/compass.png';
 import './Homepage.css';
-import { Slider } from '@mui/material';
 import { Link } from 'react-router-dom';
-
 
 export default function Homepage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { user: currentUser, username } = useCurrentUser();
   const [query, setQuery] = useState('');
   const [distance, setDistance] = useState(10);
-  const [budget, setBudget] = useState(25);
+  const [budget, setBudget] = useState(100);
   const [showFilters, setshowFilters] = useState(false);
+  const [category, setCategory] = useState('');
+  const [foodType, setFoodType] = useState('all');
+  const [housingType, setHousingType] = useState('all');
+  const [activityType, setActivityType] = useState('all');
   const [foodPlaces, setFoodPlaces] = useState([]);
   const [housingPlaces, setHousingPlaces] = useState([]);
   const [activityPlaces, setActivityPlaces] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [category, setCategory] = useState('');
-  const cacheRef = useRef({});
 
+  // Get coordinates from the landing page, if it fails use UCR as default 
+  const { lat: passedLat, lng: passedLon, schoolName: passedSchoolName } = location.state || {};
+  const defaultLat = 33.97372;
+  const defaultLon = -117.32807;
 
-  // Store the places fetched from API into the cache 
-  useEffect(() => {
+  const currentLat = passedLat ?? defaultLat;
+  const currentLon = passedLon ?? defaultLon;
+  const schoolName = passedSchoolName ?? "UCR";
 
-    try {
-      const storedCache = localStorage.getItem('placesCache');
-      if (storedCache) {
-        const parsedCache = JSON.parse(storedCache);
-        cacheRef.current = parsedCache;
-      }
-    }
-    catch (error) {
-      console.error("Error loading cache from localStorage:", error);
-    }
-  }, []);
+  const { fetchPlaces, isLoading, error } = usePlacesFetcher({ currentLat, currentLon });
 
   const handleChange = (e) => {
     setQuery(e.target.value);
@@ -52,6 +46,7 @@ export default function Homepage() {
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
+      //navigate(`/search?q=${encodeURIComponent(query)}`);
       filterBySearchQuery();
     }
   };
@@ -64,16 +59,29 @@ export default function Homepage() {
     setBudget(value);
   };
 
-  const toggleFilters = () => {
-    setshowFilters(!showFilters);
+  const handleDashboardClick = () => {
+
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    if (user) {
+      navigate('/dashboard');
+    }
+    else {
+      alert("Please login first to access the dashboard.");
+      navigate('/login');
+    }
   };
 
-  const filterRestaurants = () => {
-    setShowRestaurants(!showResturants)
-  }
+  const handleLogout = () => {
+    const auth = getAuth();
+    signOut(auth).then(() => {
+      navigate('/');
+    });
+  };
 
-  const filterFastFoods = () => {
-    setShowFastFoods(!showFastFoods)
+  const toggleFilters = () => {
+    setshowFilters(!showFilters);
   }
 
   const filterBySearchQuery = () => {
@@ -85,14 +93,14 @@ export default function Homepage() {
       );
       setFoodPlaces(filtered);
     }
-  
+
     if (category === 'housing') {
       const filtered = housingPlaces.filter(place =>
         place.name.toLowerCase().includes(lowercaseQuery)
       );
       setHousingPlaces(filtered);
     }
-  
+
     if (category === 'activity') {
       const filtered = activityPlaces.filter(place =>
         place.name.toLowerCase().includes(lowercaseQuery)
@@ -101,378 +109,84 @@ export default function Homepage() {
     }
   };
 
-  const fetchHousing = useCallback(async () => {
-
-    setCategory('housing');
-    setIsLoading(true);
-    setError(null);
-
-    const cacheKey = `housing-${query || 'all'}-${distance}-${budget}`;
-
-    if (cacheRef.current[cacheKey]) {
-      console.log("Loaded places from cache");
-      setHousingPlaces(cacheRef.current[cacheKey]);
-      setIsLoading(false);
-      return;
-    }
-
-    try {
-      console.log("Fetching from API...");
-      const response = await axios.get('https://api.foursquare.com/v3/places/search', {
-        headers: {
-          Accept: 'application/json',
-          Authorization: `${import.meta.env.VITE_API_KEY}`,
-        },
-
-        params: {
-          ll: '33.9741,-117.3281',
-          query: query || '',
-          categories: '12035,12094,12122',
-          radius: distance * 1609,
-          limit: 40,
-          fields: 'fsq_id,name,location,categories,geocodes,photos',
-        },
-      });
-
-      const places = response.data.results;
-
-      cacheRef.current[cacheKey] = places;
-
-      try {
-        localStorage.setItem('placesCache', JSON.stringify(cacheRef.current));
-      }
-      catch (error) {
-        console.error("Error saving to localstorage", error);
-      }
-
-      setHousingPlaces(places);
-
-    }
-
-    catch (error) {
-      console.error("Error fetching housing places:", error);
-      setError(error?.response?.data?.message || "Failed to fetch places");
-
-      if (error.response?.status === 401) {
-        setError("API key authentication failed. Please check your credentials.");
-      } else if (!navigator.onLine) {
-        setError("You appear to be offline. Please check your internet connection.");
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  }, [query, distance, budget]);
-
-  const fetchActivities = useCallback(async () => {
-
-    setCategory('activity');
-    setIsLoading(true);
-    setError(null);
-
-    const cacheKey = `activity-${query || 'all'}-${distance}-${budget}`;
-
-    // Check if the places are stored in the cache before fetching from API
-    if (cacheRef.current[cacheKey]) {
-      console.log("Loaded places from cache");
-      setActivityPlaces(cacheRef.current[cacheKey]);
-      setIsLoading(false);
-      return;
-    }
-
-    try {
-      console.log("Fetching from API...");
-      const response = await axios.get('https://api.foursquare.com/v3/places/search', {
-        headers: {
-          Accept: 'application/json',
-          Authorization: `${import.meta.env.VITE_API_KEY}`,
-        },
-
-        params: {
-          ll: '33.9741,-117.3281',
-          query: query || '',
-          categories: '10001,10003,10006,10004,10015,10017,10023,10024,10027,10054,10055,10061,14000,16003,16004,16005,16019,16032',
-          radius: distance * 1609,
-          limit: 50,
-          fields: 'fsq_id,name,location,categories,geocodes,photos',
-        },
-      });
-
-      const places = response.data.results;
-
-      cacheRef.current[cacheKey] = places;
-
-      try {
-        localStorage.setItem('placesCache', JSON.stringify(cacheRef.current));
-      }
-      catch (error) {
-        console.error("Error saving to localstorage", error);
-      }
-
-      setActivityPlaces(places);
-
-    }
-
-    catch (error) {
-      console.error("Error fetching housing places:", error);
-      setError(error?.response?.data?.message || "Failed to fetch places");
-
-      if (error.response?.status === 401) {
-        setError("API key authentication failed. Please check your credentials.");
-      } else if (!navigator.onLine) {
-        setError("You appear to be offline. Please check your internet connection.");
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  }, [query, distance, budget]);
-
-
-  const fetchFoodPlaces = useCallback(async () => {
-
+  const handleFoodFetch = async () => {
     setCategory('food');
-    setIsLoading(true);
-    setError(null);
-
-    const cacheKey = `${query || 'all'}-${distance}-${budget}`;
-
-    //Check in-memeory cache 
-    if (cacheRef.current[cacheKey]) {
-      console.log("Loaded places from cache");
-      setFoodPlaces(cacheRef.current[cacheKey]);
-      setIsLoading(false);
-      return;
-    }
-
-    try {
-      console.log("Fetching from API...");
-      const response = await axios.get('https://api.foursquare.com/v3/places/search', {
-        headers: {
-          Accept: 'application/json',
-          Authorization: `${import.meta.env.VITE_API_KEY}`,
-        },
-
-        params: {
-          ll: '33.9741,-117.3281',
-          query: query || '',
-          categories: '13000',
-          radius: distance * 1609,
-          limit: 40,
-          fields: 'fsq_id,name,location,categories,geocodes,photos',
-        },
-      });
-
-      const places = response.data.results;
-
-      cacheRef.current[cacheKey] = places;
-
-      try {
-        localStorage.setItem('placesCache', JSON.stringify(cacheRef.current));
-      }
-      catch (error) {
-        console.error("Error saving to localstorage", error);
-      }
-
-      setFoodPlaces(places);
-
-    }
-
-    catch (error) {
-      console.error("Error fetching food places:", error);
-      setError(error?.response?.data?.message || "Failed to fetch places");
-
-      if (error.response?.status === 401) {
-        setError("API key authentication failed. Please check your credentials.");
-      } else if (!navigator.onLine) {
-        setError("You appear to be offline. Please check your internet connection.");
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  }, [query, distance, budget]);
-
-  const clearCache = () => {
-    cacheRef.current = {};
-    localStorage.removeItem('placesCache');
-    alert("Cache cleared successfully");
+    const { data, fromCache } = await fetchPlaces('food', query, distance, budget, foodType);
+    console.log(`Food Places Loaded for ${schoolName} from ${fromCache ? 'cache' : 'API'}`);
+    setFoodPlaces(data);
   };
 
-  const printCache = () => {
-    console.log("Current Cache Contents:");
-    console.log(cacheRef.current);
-
-    // Calculate the total number of cached places
-    let totalPlaces = 0;
-    Object.values(cacheRef.current).forEach(places => {
-      totalPlaces += places.length;
-    });
-
-    console.log(`Total cached queries: ${Object.keys(cacheRef.current).length}`);
-    console.log(`Total cached places: ${totalPlaces}`);
-
-    // Alert the user so they know to check console
-    alert(`Cache printed to console. ${Object.keys(cacheRef.current).length} queries cached with ${totalPlaces} total places.`);
+  const handleHousingFetch = async () => {
+    setCategory("housing");
+    const { data, fromCache } = await fetchPlaces('housing', query, distance, budget, housingType);
+    console.log(`Housing Places Loaded for ${schoolName} from ${fromCache ? 'cache' : 'API'}`);
+    setHousingPlaces(data);
   };
 
-  const displayPlaces = () => {
-
-    if (isLoading) {
-      return <div className="loading">Loading places ...</div>;
-    }
-
-    if (error) {
-      return <div className="error-message">{error}</div>;
-    }
-
-
-    //Takes the place object and converts to a string and saves to localstorage
-    const handlePlaceClick = (place) => {
-      localStorage.setItem('selectedPlace', JSON.stringify(place));
-      navigate(`/place/${place.fsq_id}`);
-    };
-
-    if (category === 'food' && foodPlaces.length > 0) {
-      return foodPlaces.map((place) => (
-        <div
-          key={place.fsq_id}
-          className="places-box places-name-button"
-          onClick={() => handlePlaceClick(place)}
-          style={{ cursor: 'pointer' }}
-        >
-          <img
-            src={
-              place.photos?.[0]
-                ? `${place.photos[0].prefix}original${place.photos[0].suffix}`
-                : placeholder
-            }
-            alt={place.name}
-            className="place-photo"
-          />
-          <h3>
-            <Link to={`/places/${place.fsq_id}`} className="places-name-button" onClick={(e) => e.stopPropagation()}>
-              {place.name}
-            </Link>
-          </h3>
-          <p>{place.location.address || "Address not available"}</p>
-          {place.categories && place.categories[0] && (
-            <p className="category-tag">{place.categories[0].name}</p>
-          )}
-        </div>
-      ));
-    }
-    
-
-    if (category === 'housing' && housingPlaces.length > 0) {
-      return housingPlaces.map((place) => (
-        <div
-          key={place.fsq_id}
-          className="places-box housing-box"
-          style={{ cursor: 'pointer' }}
-          onClick={() => handlePlaceClick(place)}
-        >
-          <img
-            src={
-              place.photos?.[0]
-                ? `${place.photos[0].prefix}original${place.photos[0].suffix}`
-                : placeholder
-            }
-            alt={place.name}
-            className="place-photo"
-          />
-          <h3>
-            <Link to={`/places/${place.fsq_id}`} className="places-name-button" onClick={(e) => e.stopPropagation()}>
-              {place.name}
-            </Link>
-          </h3>
-          <p>{place.location.address || "Address not available"}</p>
-          {place.categories && place.categories[0] && (
-            <p className="category-tag">{place.categories[0].name}</p>
-          )}
-        </div>
-      ));
-    }
-    
-    if (category === 'activity' && activityPlaces.length > 0) {
-      return activityPlaces.map((place) => (
-        <div
-          key={place.fsq_id}
-          className="places-box activity-box"
-          style={{ cursor: 'pointer' }}
-          onClick={() => handlePlaceClick(place)}
-        >
-          <img
-            src={
-              place.photos?.[0]
-                ? `${place.photos[0].prefix}original${place.photos[0].suffix}`
-                : placeholder
-            }
-            alt={place.name}
-            className="place-photo"
-          />
-          <h3>
-            <Link to={`/places/${place.fsq_id}`} className="places-name-button" onClick={(e) => e.stopPropagation()}>
-              {place.name}
-            </Link>
-          </h3>
-          <p>{place.location.address || "Address not available"}</p>
-          {place.categories && place.categories[0] && (
-            <p className="category-tag">{place.categories[0].name}</p>
-          )}
-        </div>
-      ));
-    }
-    
-
-    return <p>Click a category to see nearby places.</p>;
-
-  }
+  const handleActivityFetch = async () => {
+    setCategory('activity');
+    const { data, fromCache } = await fetchPlaces('activity', query, distance, budget, activityType);
+    console.log(`Activity Places Loaded for ${schoolName} from ${fromCache ? 'cache' : 'API'}`);
+    setActivityPlaces(data);
+  };
 
   return (
     <>
       <div className="fixed-header">
         <img src={logo} alt="collegeCompass" className="logo" />
-
-        <button className="login-button" onClick={() => navigate('/login')}>
-          Log In
-        </button>
-
-        <button className="sign-up-button" onClick={() => navigate('/signup')}>
-          Sign Up
-        </button>
-
-        <button className="dashboard-button" onClick={() => navigate('/dashboard')}>
-          Dashboard
-        </button>
-
+        {currentUser ? (
+          <div className='user-controls'>
+            <span className = "username"> 
+              <User 
+                size = {22} 
+                style = {{marginRight: '8px', verticalAlign: 'bottom' }}
+              /> {username} 
+            </span>
+            <button className="logout-button" onClick={handleLogout}>
+              Logout
+            </button>
+            <button className="dashboard-button" onClick={handleDashboardClick}>
+              Dashboard
+            </button>
+          </div>
+        ) : (
+          <div className='user-controls'>
+            <button className="login-button" onClick={() => navigate('/login')}>
+              Log In
+            </button>
+            <button className="sign-up-button" onClick={() => navigate('/signup')}>
+              Sign Up
+            </button>
+            <button className="dashboard-button-2" onClick={handleDashboardClick}>
+              Dashboard
+            </button>
+          </div>
+        )}
 
         <div className="category-buttons">
-
-          <button className="food-spots-button" onClick={fetchFoodPlaces}>
+          <button className="food-spots-button" onClick={handleFoodFetch}>
             Food
           </button>
-
-          <button className="activities-button" onClick={fetchActivities}>
+          <button className="activities-button" onClick={handleActivityFetch}>
             Activites
           </button>
-
-          <button className="housing-button" onClick={fetchHousing}>
+          <button className="housing-button" onClick={handleHousingFetch}>
             Housing
           </button>
-
         </div>
 
         <div className="search-bar-wrapper">
           <img src={compass} alt="Search Icon" className="search-icon" />
           <div className='search-input-wrapper'>
-            <input
-              type="text"
-              value={query}
-              onChange={handleChange}
-              onKeyDown={handleKeyDown}
-              className="search-input"
-              placeholder="Search..."
-            />
-
-            <button onClick={filterBySearchQuery} className='search-button'>
+          <input
+            type="text"
+            value={query}
+            onChange={handleChange}
+            onKeyDown={handleKeyDown}
+            className="search-input"
+            placeholder="Search..."
+          />
+          <button onClick={filterBySearchQuery} className='search-button'>
               <img src={search} alt="search" className="search-button-image" />
             </button>
           </div>
@@ -483,63 +197,45 @@ export default function Homepage() {
         </button>
       </div>
 
-      <div className="content">
+      <div className='content'> 
         {showFilters && (
-          <div className="sliders-container">
-            <div className="distance-slider-container">
-              <label htmlFor="distance" className="distance-label">
-                Distance: {distance} miles
-              </label>
-
-              <Slider
-                id="distance"
-                value={distance}
-                onChange={handleDistanceChange}
-                min={1}
-                max={10}
-                step={1}
-                valueLabelDisplay="auto"
-                className="slider"
-              />
-
-              <div className="slider-range-labels">
-                <span>1 mi</span>
-                <span>10 mi</span>
-              </div>
-            </div>
-
-            <div className="budget-slider-container">
-              <label htmlFor="budget" className="budget-label">
-                Budget: ${budget}
-              </label>
-
-              <Slider
-                id="distance"
-                value={budget}
-                onChange={handleBudgetChange}
-                min={1}
-                max={100}
-                step={1}
-                valueLabelDisplay="auto"
-                className="slider"
-              />
-
-              <div className="slider-range-labels">
-                <span>$1</span>
-                <span>$100+</span>
-              </div>
-            </div>
-
-          </div>
+          <FilterSliders
+            distance={distance}
+            budget={budget}
+            onDistanceChange={handleDistanceChange}
+            onBudgetChange={handleBudgetChange}
+            selectedCategory={category}
+            selectedFoodType={foodType}
+            onFoodTypeSelect={setFoodType}
+            selectedHousingType={housingType}
+            onHousingTypeSelect={setHousingType}
+            selectedActivityType={activityType}
+            onActivityTypeSelect={setActivityType}
+          />
         )}
 
-       <div className="places-container">
-          {displayPlaces()}
+        {isLoading && <div className='loading'> Loading Places ... </div>}
+        {error && <div className='error-message'>{error}</div>}
+
+        <div className='places-container'>
+          <PlacesList
+            category={category}
+            foodPlaces={foodPlaces}
+            housingPlaces={housingPlaces}
+            activityPlaces={activityPlaces}
+            currentLat={currentLat}
+            currentLon={currentLon}
+            distance={distance}
+            budget={budget}
+            SearchFilter={SearchFilter}
+            selectedFoodType={foodType}
+            selectedHousingType={housingType}
+            selectedActivityType={activityType}
+            schoolName={schoolName}
+          />
         </div>
-
-      </div>
+    </div>
     </>
-  );
+      );
 }
-
 

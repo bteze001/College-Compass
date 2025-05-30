@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 
 import axios from 'axios';
 import logo from '../assets/logo.png';
@@ -26,6 +26,8 @@ export default function PlaceDetail() {
     email: 'test@example.com'
   };
 
+  const location = useLocation();
+  const selectedSchool = location.state?.schoolName || "UCR";
 
   //When the page opens, check if we already saved this place(in browser) 
   //If yes, then we use it. If not then go get it using the ID. 
@@ -160,12 +162,21 @@ export default function PlaceDetail() {
             src={logo} 
             alt="collegeCompass" 
             className="logo" 
-            onClick={() => navigate('/')}
+            onClick={() => navigate('/homepage')}
             style={{ cursor: 'pointer' }}
           />
-          <button className="back-button" onClick={() => navigate('/')}>
+          <button 
+            className="back-button" 
+            onClick={() => navigate('/homepage', {
+              state: {
+                schoolName: selectedSchool,
+                lat: location.state?.lat,
+                lng: location.state?.lng
+              }
+            })
+          }>
             Back to Home
-          </button>
+        </button>
         </div>
         <div className="loading">Loading place details... Place ID: {placeId}</div>
       </div>
@@ -180,12 +191,21 @@ export default function PlaceDetail() {
           src={logo} 
           alt="collegeCompass" 
           className="logo" 
-          onClick={() => navigate('/')}
+          onClick={() => navigate('/homepage')}
           style={{ cursor: 'pointer' }}
         />
         
-        <button className="back-button" onClick={() => navigate('/')}>
-          Back to Home
+        <button 
+          className="back-button" 
+          onClick={() => navigate('/homepage', {
+            state: {
+              schoolName: selectedSchool,
+              lat: location.state?.lat,
+              lng: location.state?.lng
+            }
+            })
+          }>
+            Back to Home
         </button>
       </div>
 
