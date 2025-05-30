@@ -4,6 +4,7 @@ import ExploreIcon from "@mui/icons-material/Explore";
 import logo from "../assets/logo_1.png" // adjust path to your logo
 import { useNavigate } from "react-router-dom";
 
+
 function SearchSchool({ placeholder, data }) {
   const [filteredData, setFilteredData] = useState([]);
   const navigate = useNavigate();
@@ -23,8 +24,8 @@ function SearchSchool({ placeholder, data }) {
       <div className="topBar">
         <div></div>
         <div className="authButtons">
-          <button className="authBtn">Log In</button>
-          <button className="authBtn dark">Sign Up</button>
+          <button className="authBtn" onClick={() => navigate('./LogIn')}>Log In</button>
+          <button className="authBtn dark" onClick={() => navigate('/login?register=true')}>Sign Up</button>
         </div>
       </div>
 

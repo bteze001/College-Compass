@@ -50,7 +50,7 @@
     z-index: 1000;
   }
   
-  .login-button {
+  .login-button{
     position: fixed;
     top: 10px;
     right: 125px;
@@ -63,12 +63,25 @@
     font-weight: bold;
     cursor: pointer;
   }
+
+  .username {
+    position: fixed;
+    top: 10px;
+    right: 125px;
+    padding: 8px 20px;
+    font-size: 12pt;
+    border: none;
+    background-color: #f3e8ff;
+    border-radius: 6px;
+    color: #6b21a8;
+    font-weight: bold;
+  }
   
   .login-button.login-button:hover {
     background-color: #e9d5ff;
   }
   
-  .sign-up-button {
+  .sign-up-button, .logout-button  {
     position: fixed;
     top: 10px;
     right: 15px;
@@ -81,15 +94,15 @@
     font-weight: bold;
     cursor: pointer;
   }
+
   
   .sign-up-button.sign-up-button:hover {
     background-color: #d1d5db;
   }
   
-  .dashboard-button {
+  .dashboard-button, .dashboard-button-2 {
     position: fixed;
     top: 10px;
-    right: 220px;
     padding: 8px 16px;
     font-size: 12pt;
     border: none;
@@ -100,9 +113,21 @@
     color: #000000;
     font-weight: bold;
     cursor: pointer;
+
   }
+
+  .dashboard-button {
+
+    right: 260px;
+  }
+
+  .dashboard-button-2 {
+
+    right: 220px;
+  }
+
   
-  .dashboard-button.dashboard-button:hover {
+  .dashboard-button.dashboard-button:hover, .dashboard-button-2:hover {
     background-color: #d1d5db;
   }
   

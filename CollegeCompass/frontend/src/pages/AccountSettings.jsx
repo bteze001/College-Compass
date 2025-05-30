@@ -1,35 +1,142 @@
-import React from 'react';
-import './UserDashboard.css'; // Assumes you’ll add styles to the existing CSS file
+import React, { useEffect, useState } from 'react';
+import { auth } from '../firebase'
+import './UserDashboard.css'; 
+import { updateProfile } from 'firebase/auth';
+import { updateEmail } from 'firebase/auth';
+import { updatePassword } from 'firebase/auth';
+import { FaEdit } from 'react-icons/fa';
 
 const AccountSettings = () => {
+
+  const [userData, setUserData] = useState({
+    username: '',
+    email: '',
+    password: '',
+  });
+
+  const [isEditing, setIsEditing] = useState({
+    username: false,
+    email: false,
+    password: false,
+  });
+
+  const [message, setMessage] = useState('');
+
+  useEffect(() => {
+
+    const user = auth.currentUser;
+    if (user) {
+      setUserData({
+        username: user.displayName || '',
+        email: user.email || '',
+        password: '',
+      });
+    }
+  }, []);
+
+  const handleEditClick = (field) => {
+    setIsEditing((prev) => ({
+      ...prev, [
+        field]: true
+    }));
+  };
+
+  const handleChange = (e) => {
+
+    const { name, value } = e.target;
+    setUserData((prev) => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSave = async (field) => {
+    const user = auth.currentUser;
+    setMessage('');
+
+    try {
+      if (field === 'username') {
+        await updateProfile(user, { displayName: userData.username });
+      } else if (field === 'email') {
+        await updateEmail(user, userData.email);
+      } else if (field === 'password') {
+        await updatePassword(user, userData.password);
+        setUserData((prev) => ({ ...prev, password: '' }));
+      }
+
+      setIsEditing((prev) => ({ ...prev, [field]: false }));
+      setMessage('Changes saved!');
+    } catch (error) {
+      console.error(error);
+      setMessage(error.message);
+    }
+  };
+
   return (
     <div className="account-settings-container">
+
       <h2>Account Settings</h2>
 
+      {message && <p className="status-message">{message}</p>}
+
       <div className="settings-group">
+
+        {/* Username */}
         <div className="setting-item">
-          <label>Name</label>
-          <input type="text" placeholder="Enter your name" disabled />
+          <label>Username</label>
+          <div className="editable-field">
+            <input
+              type="text"
+              name="username"
+              value={userData.username}
+              disabled={!isEditing.username}
+              onChange={handleChange}
+            />
+            {!isEditing.username ? (
+              <FaEdit className="edit-icon" onClick={() => handleEditClick('username')} />
+            ) : (
+              <button className="save-button" onClick={() => handleSave('username')}>Save</button>
+            )}
+          </div>
         </div>
 
-        <div className="setting-item">
-          <label>Birthday</label>
-          <input type="date" disabled />
-        </div>
-
+        {/* Email */}
         <div className="setting-item">
           <label>Email</label>
-          <input type="email" placeholder="visitor@ucr.edu" disabled />
+          <div className="editable-field">
+            <input
+              type="email"
+              name="email"
+              value={userData.email}
+              disabled={!isEditing.email}
+              onChange={handleChange}
+            />
+            {!isEditing.email ? (
+              <FaEdit className="edit-icon" onClick={() => handleEditClick('email')} />
+            ) : (
+              <button className="save-button" onClick={() => handleSave('email')}>Save</button>
+            )}
+          </div>
         </div>
 
-        <div className="setting-item">
-          <label>Privacy Settings</label>
-          <button className="setting-button">Manage Privacy</button>
-        </div>
-
+        {/* Password */}
         <div className="setting-item">
           <label>Password</label>
-          <button className="setting-button">Change Password</button>
+          <div className="editable-field">
+            <input
+              type="password"
+              name="password"
+              value={userData.password}
+              disabled={!isEditing.password}
+              onChange={handleChange}
+              placeholder="Enter new password"
+            />
+            {!isEditing.password ? (
+              <FaEdit className="edit-icon" onClick={() => handleEditClick('password')} />
+            ) : (
+              <button className="save-button" onClick={() => handleSave('password')}>Save</button>
+            )}
+          </div>
         </div>
       </div>
     </div>
@@ -37,3 +144,39 @@ const AccountSettings = () => {
 };
 
 export default AccountSettings;
+
+// return (
+  //   <div className="account-settings-container">
+  //     <h2>Account Settings</h2>
+
+  //     <div className="settings-group">
+  //       <div className="setting-item">
+  //         <label>Name</label>
+  //         <input type="text" placeholder="Enter your name" disabled />
+  //       </div>
+
+  //       <div className="setting-item">
+  //         <label>Birthday</label>
+  //         <input type="date" disabled />
+  //       </div>
+
+  //       <div className="setting-item">
+  //         <label>Email</label>
+  //         <input type="email" placeholder="visitor@ucr.edu" disabled />
+  //       </div>
+
+  //       <div className="setting-item">
+  //         <label>Privacy Settings</label>
+  //         <button className="setting-button">Manage Privacy</button>
+  //       </div>
+
+  //       <div className="setting-item">
+  //         <label>Password</label>
+  //         <button className="setting-button">Change Password</button>
+  //       </div>
+  //     </div>
+  //   </div>
+  // );
+  // };
+
+  // export default AccountSettings;

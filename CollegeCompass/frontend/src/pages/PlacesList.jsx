@@ -2,18 +2,26 @@ import coffeeShops from '../assets/coffeeShop.webp';
 import park from '../assets/park.webp';
 import { useNavigate } from 'react-router-dom';
 import placeholder from '../assets/place-hold.jpg';
+import './PlacesList.css'
+//import { a } from 'vitest/dist/chunks/suite.d.FvehnV49.js';
 
 export default function PlacesList({ category, foodPlaces, housingPlaces,
     activityPlaces, currentLat, currentLon,
     distance, budget, SearchFilter,
-    selectedFoodType, selectedHousingType, selectedActivityType }) {
+    selectedFoodType, selectedHousingType, selectedActivityType, schoolName }) {
 
     const navigate = useNavigate();
 
     //Takes the place object and converts to a string and saves to localstorage
     const handlePlaceClick = (place) => {
         localStorage.setItem('selectedPlace', JSON.stringify(place));
-        navigate(`/place/${place.fsq_id}`);
+        navigate(`/place/${place.fsq_id}`, {
+            state: {
+                schoolName,
+                lat: currentLat,
+                lng: currentLon
+            }
+        });
     };
 
     const minPrice = 1;
@@ -93,7 +101,22 @@ export default function PlacesList({ category, foodPlaces, housingPlaces,
                         className="place-photo"
                     />
                     <h3>{place.name}</h3>
-                    <p>{place.location.address || "Address not available"}</p>
+                    {place.geocodes?.main ? (
+                        <a
+                            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.name)} ${place.location.address || ''}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className='place-address-link'
+                        >
+                            <p>{place.location.address || "Address not available"}</p>
+                        </a>
+
+                    ) : (
+
+                        <p>{place.location.address || "Address not available"}</p>
+
+                    )}
+                    {/* <p>{place.location.address || "Address not available"}</p> */}
                     {place.categories && place.categories[0] && (
                         <p className="category-tag">{place.categories[0].name}</p>
                     )}
@@ -151,7 +174,22 @@ export default function PlacesList({ category, foodPlaces, housingPlaces,
                     className="place-photo"
                 />
                 <h3>{place.name}</h3>
-                <p>{place.location.address || "Address not available"}</p>
+                {place.geocodes?.main ? (
+                    <a
+                        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.name)} ${place.location.address || ''}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className='place-address-link'
+                    >
+                        <p>{place.location.address || "Address not available"}</p>
+                    </a>
+
+                ) : (
+
+                    <p>{place.location.address || "Address not available"}</p>
+
+                )}
+                {/* <p>{place.location.address || "Address not available"}</p> */}
                 {place.categories && place.categories[0] && (
                     <p className="category-tag">{place.categories[0].name}</p>
                 )}
@@ -221,7 +259,22 @@ export default function PlacesList({ category, foodPlaces, housingPlaces,
                         className="place-photo"
                     />
                     <h3>{place.name}</h3>
-                    <p>{place.location.address || "Address not available"}</p>
+                    {place.geocodes?.main ? (
+                        <a
+                            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.name)} ${place.location.address || ''}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className='place-address-link'
+                        >
+                            <p>{place.location.address || "Address not available"}</p>
+                        </a>
+
+                    ) : (
+
+                        <p>{place.location.address || "Address not available"}</p>
+
+                    )}
+
                     {place.categories && place.categories[0] && (
                         <p className="category-tag">{place.categories[0].name}</p>
                     )}

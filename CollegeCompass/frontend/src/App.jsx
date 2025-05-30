@@ -15,7 +15,7 @@ export default function App() {
       <Route path="/" element={<SearchSchool placeholder="Find a school..." data={SchoolData} />} />
       <Route path="/homepage" element={<Homepage />} />
       <Route path="/place/:placeId" element={<PlaceDetail />} />
-      <Route path="/dashboard" element={<Dashboard/>} />
+      <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/login" element={<LogIn />} />
       <Route path="/signup" element={<SignUp />} />
     </Routes>

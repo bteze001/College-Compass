@@ -3,6 +3,7 @@ import { Trash } from 'lucide-react';
 import { Link } from 'react-router-dom'; // ✅ added for routing
 import './UserDashboard.css';
 import AccountSettings from './AccountSettings';
+import useCurrentUser from './useCurrentUser';
 import logo from '../assets/logo.png';
 
 const CollegeCompassDash = () => {
@@ -13,6 +14,8 @@ const CollegeCompassDash = () => {
     { id: 2, name: 'Place Name', rating: 4 },
     { id: 3, name: 'Place Name', rating: 3 }
   ]);
+
+  const {user, username} = useCurrentUser();
 
   const handleDelete = (id) => {
     setFavorites(favorites.filter(place => place.id !== id));
@@ -39,8 +42,8 @@ const CollegeCompassDash = () => {
             </div>
           </div>
           <div className="user-details">
-            <div className="username">Username</div>
-            <div className="user-email">visitor@ucr.edu</div>
+            <div className="username_dashboard">{username}</div>
+            <div className="user-email">{user?.email}</div>
           </div>
         </div>
       </div>

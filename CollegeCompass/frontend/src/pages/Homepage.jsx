@@ -4,6 +4,9 @@ import usePlacesFetcher from '../../../backend/places';
 import FilterSliders from './FilterSliders';
 import PlacesList from './PlacesList';
 import SearchFilter from '../../../backend/SearchFilter';
+import useCurrentUser from './useCurrentUser';
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+import {User} from 'lucide-react'
 import search from '../assets/search-icon.png';
 import logo from '../assets/logo.png';
 import compass from '../assets/compass.png';
@@ -13,6 +16,7 @@ import { Link } from 'react-router-dom';
 export default function Homepage() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user: currentUser, username } = useCurrentUser();
   const [query, setQuery] = useState('');
   const [distance, setDistance] = useState(10);
   const [budget, setBudget] = useState(100);
@@ -26,12 +30,13 @@ export default function Homepage() {
   const [activityPlaces, setActivityPlaces] = useState([]);
 
   // Get coordinates from the landing page, if it fails use UCR as default 
-  const { lat: passedLat, lng: passedLon, schoolName } = location.state || {};
+  const { lat: passedLat, lng: passedLon, schoolName: passedSchoolName } = location.state || {};
   const defaultLat = 33.97372;
   const defaultLon = -117.32807;
 
   const currentLat = passedLat ?? defaultLat;
   const currentLon = passedLon ?? defaultLon;
+  const schoolName = passedSchoolName ?? "UCR";
 
   const { fetchPlaces, isLoading, error } = usePlacesFetcher({ currentLat, currentLon });
 
@@ -49,9 +54,30 @@ export default function Homepage() {
   const handleDistanceChange = (e, value) => {
     setDistance(value);
   };
-    
+
   const handleBudgetChange = (e, value) => {
     setBudget(value);
+  };
+
+  const handleDashboardClick = () => {
+
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    if (user) {
+      navigate('/dashboard');
+    }
+    else {
+      alert("Please login first to access the dashboard.");
+      navigate('/login');
+    }
+  };
+
+  const handleLogout = () => {
+    const auth = getAuth();
+    signOut(auth).then(() => {
+      navigate('/');
+    });
   };
 
   const toggleFilters = () => {
@@ -67,14 +93,14 @@ export default function Homepage() {
       );
       setFoodPlaces(filtered);
     }
-  
+
     if (category === 'housing') {
       const filtered = housingPlaces.filter(place =>
         place.name.toLowerCase().includes(lowercaseQuery)
       );
       setHousingPlaces(filtered);
     }
-  
+
     if (category === 'activity') {
       const filtered = activityPlaces.filter(place =>
         place.name.toLowerCase().includes(lowercaseQuery)
@@ -85,22 +111,22 @@ export default function Homepage() {
 
   const handleFoodFetch = async () => {
     setCategory('food');
-    const {data, fromCache} = await fetchPlaces('food', query, distance, budget, foodType);
-    console.log(`Food Places Loaded from ${fromCache ? 'cache' :  'API'}`);
+    const { data, fromCache } = await fetchPlaces('food', query, distance, budget, foodType);
+    console.log(`Food Places Loaded for ${schoolName} from ${fromCache ? 'cache' : 'API'}`);
     setFoodPlaces(data);
   };
 
   const handleHousingFetch = async () => {
     setCategory("housing");
-    const {data, fromCache} = await fetchPlaces('housing', query, distance, budget, housingType);
-    console.log(`Housing Places Loaded from ${fromCache ? 'cache' :  'API'}`);
+    const { data, fromCache } = await fetchPlaces('housing', query, distance, budget, housingType);
+    console.log(`Housing Places Loaded for ${schoolName} from ${fromCache ? 'cache' : 'API'}`);
     setHousingPlaces(data);
   };
 
   const handleActivityFetch = async () => {
     setCategory('activity');
-    const {data, fromCache} = await fetchPlaces('activity', query, distance, budget, activityType);
-    console.log(`Activity Places Loaded from ${fromCache ? 'cache' :  'API'}`);
+    const { data, fromCache } = await fetchPlaces('activity', query, distance, budget, activityType);
+    console.log(`Activity Places Loaded for ${schoolName} from ${fromCache ? 'cache' : 'API'}`);
     setActivityPlaces(data);
   };
 
@@ -108,15 +134,34 @@ export default function Homepage() {
     <>
       <div className="fixed-header">
         <img src={logo} alt="collegeCompass" className="logo" />
-        <button className="login-button" onClick={() => navigate('/login')}>
-          Log In
-        </button>
-        <button className="sign-up-button" onClick={() => navigate('/signup')}>
-          Sign Up
-        </button>
-        <button className="dashboard-button" onClick={() => navigate('/dashboard')}>
-          Dashboard
-        </button>
+        {currentUser ? (
+          <div className='user-controls'>
+            <span className = "username"> 
+              <User 
+                size = {22} 
+                style = {{marginRight: '8px', verticalAlign: 'bottom' }}
+              /> {username} 
+            </span>
+            <button className="logout-button" onClick={handleLogout}>
+              Logout
+            </button>
+            <button className="dashboard-button" onClick={handleDashboardClick}>
+              Dashboard
+            </button>
+          </div>
+        ) : (
+          <div className='user-controls'>
+            <button className="login-button" onClick={() => navigate('/login')}>
+              Log In
+            </button>
+            <button className="sign-up-button" onClick={() => navigate('/signup')}>
+              Sign Up
+            </button>
+            <button className="dashboard-button-2" onClick={handleDashboardClick}>
+              Dashboard
+            </button>
+          </div>
+        )}
 
         <div className="category-buttons">
           <button className="food-spots-button" onClick={handleFoodFetch}>
@@ -186,10 +231,11 @@ export default function Homepage() {
             selectedFoodType={foodType}
             selectedHousingType={housingType}
             selectedActivityType={activityType}
+            schoolName={schoolName}
           />
         </div>
     </div>
     </>
-  );
+      );
 }
 
