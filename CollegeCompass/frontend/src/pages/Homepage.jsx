@@ -133,8 +133,14 @@ export default function Homepage() {
   return (
     <>
       <div className="fixed-header">
-        <img src={logo} alt="collegeCompass" className="logo" />
-        {currentUser ? (
+      <img
+        src={logo}
+        alt="collegeCompass"
+        className="logo"
+        onClick={() => navigate('/')}
+        style={{ cursor: 'pointer' }}
+      />
+          {currentUser ? (
           <div className='user-controls'>
             <span className = "username"> 
               <User 

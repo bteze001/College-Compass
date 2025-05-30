@@ -41,7 +41,7 @@ export default function usePlacesFetcher({currentLat, currentLon}) {
 
                 headers: {
                     Accept: 'application/json',
-                    Authorization: `${import.meta.env.VITE_API_KEY}`,
+                    Authorization: import.meta.env.VITE_API_KEY,
                 },
                 
                 params: {
