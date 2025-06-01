@@ -39,13 +39,16 @@ export default function Homepage() {
 
   const { fetchPlaces, isLoading, error, clearCache } = usePlacesFetcher({ currentLat, currentLon });
 
+  useEffect(() => {
+    handleFoodFetch(); 
+  }, []);
+
   const handleChange = (e) => {
     setQuery(e.target.value);
   };
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
-      //navigate(`/search?q=${encodeURIComponent(query)}`);
       filterBySearchQuery();
     }
   };
@@ -169,13 +172,13 @@ export default function Homepage() {
         )}
 
         <div className="category-buttons">
-          <button className="food-spots-button" onClick={handleFoodFetch}>
+          <button className={`food-spots-button ${category === 'food' ? 'active' : ''}`} onClick={handleFoodFetch}>
             Food
           </button>
-          <button className="activities-button" onClick={handleActivityFetch}>
+          <button className={`activities-button ${category === 'activity' ? 'active' : ''}`}onClick={handleActivityFetch}>
             Activites
           </button>
-          <button className="housing-button" onClick={handleHousingFetch}>
+          <button className={`housing-button ${category === 'housing' ? 'active' : ''}`} onClick={handleHousingFetch}>
             Housing
           </button>
 

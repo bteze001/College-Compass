@@ -103,7 +103,8 @@ export default function PlaceDetail() {
 
       await addFavorite ({
         ...place,
-        rating: rating || 0
+        rating: rating || 0,
+        userRating: userRating || 0
       });
 
       setMessage('Added tp favorites!');

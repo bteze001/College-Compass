@@ -131,6 +131,12 @@ body, html {
   background-color: #d1d5db;
 }
 
+.category-buttons button.active {
+  background-color: #cb9aff;
+  border: none;
+  
+}
+
 .food-spots-button {
   position: fixed;
   width: 440px;

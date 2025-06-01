@@ -23,20 +23,11 @@ export const addFavorite = async (place) => {
     await setDoc(ref, {
         name: place.name,
         rating: place.rating || 0,
+        userRating: place.userRating ?? 0,
         category,
         address,
         photo,
         fsq_id: place.fsq_id,
     });
 
-
-    // await setDoc (ref, {
-    //     name: place.name,
-    //     rating: place.rating,
-    //     category: place.categories[0].name|| 'Unknown',
-    //     address: place.location?.address || '',
-    //     photo: place.photos?.[0] ? `${place.photos[0].prefix}original${place.photos[0].suffix}`: '',
-    //     fsq_id: place.fsq_id,
-
-    // });
 };

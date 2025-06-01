@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Trash, Home, Utensils, MapPin } from 'lucide-react';
 import { db, auth } from '../firebase';
 import { getDocs, collection, deleteDoc, doc } from 'firebase/firestore';
@@ -18,6 +19,7 @@ const CollegeCompassDash = () => {
 
   const [favorites, setFavorites] = useState([]);
   const { user, username } = useCurrentUser();
+  const navigate = useNavigate();
 
   useEffect(() => {
 
@@ -31,8 +33,25 @@ const CollegeCompassDash = () => {
         ...doc.data()
       }));
 
+      const dataWithRatings = await Promise.all(data.map(async (place) => {
+        const ratingsSnapshot = await getDocs(collection(db, 'ratings'));
+        const relevantRatings = ratingsSnapshot.docs
+          .map(doc => doc.data())
+          .filter(r => r.placeId === place.fsq_id || r.placeId === place.id);
+
+          if (relevantRatings.length > 0) {
+            const sum = relevantRatings.reduce((acc, r) => acc + r.rating, 0);
+            const avgRating = sum / relevantRatings.length;
+            console.log("Ratings from database: ", {avgRating})
+            return { ...place, rating: avgRating };
+          }
+          
+          console.log("No ratings for this place")
+          return { ...place, rating: null || 0};
+      }));
+
       console.log('Fetched favorites:', data);
-      setFavorites(data);
+      setFavorites(dataWithRatings);
     };
 
     fetchFavorites();
@@ -83,12 +102,11 @@ const CollegeCompassDash = () => {
   
     return <Home size={50} />; // fallback
   };
+
+  const getRatings = (place) => {
+    return place.rating || 0;
+  };
   
-
-
-  // const handleDelete = (id) => {
-  //   setFavorites(favorites.filter(place => place.id !== id));
-  // };
 
   const handleDelete = async (fsqId) => {
 
@@ -104,9 +122,7 @@ const CollegeCompassDash = () => {
       {/* Logo and Edit Profile button */}
       <div className="dashboard-header">
         <img src={logo} alt="College Compass Logo" className="dashboard-logo" />
-        {/* <Link to="/edit-profile">
-          <button className="edit-profile-button">Edit Profile</button>
-        </Link> */}
+        <button className='back' onClick={() => navigate('/homepage')}> Home </button>
       </div>
 
       {/* User info section */}
@@ -153,7 +169,7 @@ const CollegeCompassDash = () => {
       {activeTab === 'favorites' && (
         <div className="favorites-list">
           {favorites.map((place) => (
-            <div key={place.id} className="favorite-item">
+            <div key={place.id || place.fsq_id} className="favorite-item">
               <div className="place-info">
                 <div className="place-icon">
                   {getCategoryIcon(place.category)}
@@ -171,7 +187,8 @@ const CollegeCompassDash = () => {
                   <div className="stars">
                     {Array.from({ length: 5 }).map((_, i) => (
                       <span key={i} className="star">
-                        {i < Math.floor((place.rating || 0) / 2) ? '★' : '☆'}
+                        {/* {i < Math.floor((place.rating || 0) / 2) ? '★' : '☆'} */}
+                        {i < Math.floor(getRatings(place)) ? '★' : '☆'}
                       </span>
                     ))}
                   </div>

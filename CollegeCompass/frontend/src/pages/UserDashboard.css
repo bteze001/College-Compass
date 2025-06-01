@@ -254,3 +254,18 @@
   margin-left: 10px;
 }
 
+.back {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  background-color: #f3e8ff;
+  color: #6b21a8;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.back:hover {
+  background-color: #e9d5ff;
+}
