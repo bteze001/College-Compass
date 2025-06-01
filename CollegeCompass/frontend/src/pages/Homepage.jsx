@@ -5,13 +5,12 @@ import FilterSliders from './FilterSliders';
 import PlacesList from './PlacesList';
 import SearchFilter from '../../../backend/SearchFilter';
 import useCurrentUser from './useCurrentUser';
-import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
-import {User} from 'lucide-react'
+import { getAuth, signOut } from 'firebase/auth';
+import { User } from 'lucide-react'
 import search from '../assets/search-icon.png';
 import logo from '../assets/logo.png';
 import compass from '../assets/compass.png';
 import './Homepage.css';
-import { Link } from 'react-router-dom';
 
 export default function Homepage() {
   const navigate = useNavigate();
@@ -38,7 +37,7 @@ export default function Homepage() {
   const currentLon = passedLon ?? defaultLon;
   const schoolName = passedSchoolName ?? "UCR";
 
-  const { fetchPlaces, isLoading, error } = usePlacesFetcher({ currentLat, currentLon });
+  const { fetchPlaces, isLoading, error, clearCache } = usePlacesFetcher({ currentLat, currentLon });
 
   const handleChange = (e) => {
     setQuery(e.target.value);
@@ -136,11 +135,11 @@ export default function Homepage() {
         <img src={logo} alt="collegeCompass" className="logo" />
         {currentUser ? (
           <div className='user-controls'>
-            <span className = "username"> 
-              <User 
-                size = {22} 
-                style = {{marginRight: '8px', verticalAlign: 'bottom' }}
-              /> {username} 
+            <span className="username">
+              <User
+                size={22}
+                style={{ marginRight: '8px', verticalAlign: 'bottom' }}
+              /> {username}
             </span>
             <button className="logout-button" onClick={handleLogout}>
               Logout
@@ -173,20 +172,21 @@ export default function Homepage() {
           <button className="housing-button" onClick={handleHousingFetch}>
             Housing
           </button>
+
         </div>
 
         <div className="search-bar-wrapper">
           <img src={compass} alt="Search Icon" className="search-icon" />
           <div className='search-input-wrapper'>
-          <input
-            type="text"
-            value={query}
-            onChange={handleChange}
-            onKeyDown={handleKeyDown}
-            className="search-input"
-            placeholder="Search..."
-          />
-          <button onClick={filterBySearchQuery} className='search-button'>
+            <input
+              type="text"
+              value={query}
+              onChange={handleChange}
+              onKeyDown={handleKeyDown}
+              className="search-input"
+              placeholder="Search..."
+            />
+            <button onClick={filterBySearchQuery} className='search-button'>
               <img src={search} alt="search" className="search-button-image" />
             </button>
           </div>
@@ -197,7 +197,7 @@ export default function Homepage() {
         </button>
       </div>
 
-      <div className='content'> 
+      <div className='content'>
         {showFilters && (
           <FilterSliders
             distance={distance}
@@ -234,8 +234,8 @@ export default function Homepage() {
             schoolName={schoolName}
           />
         </div>
-    </div>
+      </div>
     </>
-      );
+  );
 }
 

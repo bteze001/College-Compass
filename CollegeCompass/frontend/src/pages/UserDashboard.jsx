@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { Trash } from 'lucide-react';
-import { Link } from 'react-router-dom'; // ✅ added for routing
+import React, { useState, useEffect } from 'react';
+import { Trash, Home, Utensils, MapPin } from 'lucide-react';
+import { db, auth } from '../firebase';
+import { getDocs, collection, deleteDoc, doc } from 'firebase/firestore';
 import './UserDashboard.css';
 import AccountSettings from './AccountSettings';
 import useCurrentUser from './useCurrentUser';
@@ -9,16 +10,92 @@ import logo from '../assets/logo.png';
 const CollegeCompassDash = () => {
   const [activeTab, setActiveTab] = useState('favorites');
 
-  const [favorites, setFavorites] = useState([
-    { id: 1, name: 'Place Name', rating: 3 },
-    { id: 2, name: 'Place Name', rating: 4 },
-    { id: 3, name: 'Place Name', rating: 3 }
-  ]);
+  // const [favorites, setFavorites] = useState([
+  //   { id: 1, name: 'Place Name', rating: 3 },
+  //   { id: 2, name: 'Place Name', rating: 4 },
+  //   { id: 3, name: 'Place Name', rating: 3 }
+  // ]);
 
-  const {user, username} = useCurrentUser();
+  const [favorites, setFavorites] = useState([]);
+  const { user, username } = useCurrentUser();
 
-  const handleDelete = (id) => {
-    setFavorites(favorites.filter(place => place.id !== id));
+  useEffect(() => {
+
+    const fetchFavorites = async () => {
+
+      if (!user) return;
+
+      const snapshot = await getDocs(collection(db, 'favorites', user.uid, 'places'));
+      const data = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+
+      console.log('Fetched favorites:', data);
+      setFavorites(data);
+    };
+
+    fetchFavorites();
+  }, [user]);
+
+  const getCategoryIcon = (category) => {
+    const lower = category?.toLowerCase() || '';
+  
+    if (
+      lower.includes('apartment') ||
+      lower.includes('housing') ||
+      lower.includes('condo') ||
+      lower.includes('residence') ||
+      lower.includes('complex') ||
+      lower.includes('hall') ||
+      lower.includes('college')
+    ) {
+      return <Home size={50} />;
+    }
+  
+    if (
+      lower.includes('food') ||
+      lower.includes('restaurant') ||
+      lower.includes('café') ||
+      lower.includes('coffee') ||
+      lower.includes('bubble tea') ||
+      lower.includes('burger') ||
+      lower.includes('deli') ||
+      lower.includes('chicken') ||
+      lower.includes('sandwich') ||
+      lower.includes('steak') ||
+      lower.includes('joint') ||
+      lower.includes('diner')
+    ) {
+      return <Utensils size={50} />;
+    }
+  
+    if (
+      lower.includes('park') ||
+      lower.includes('trail') ||
+      lower.includes('museum') ||
+      lower.includes('cineam') ||
+      lower.includes('hiking') ||
+      lower.includes('theater')
+    ) {
+      return <MapPin size={50} />;
+    }
+  
+    return <Home size={50} />; // fallback
+  };
+  
+
+
+  // const handleDelete = (id) => {
+  //   setFavorites(favorites.filter(place => place.id !== id));
+  // };
+
+  const handleDelete = async (fsqId) => {
+
+    if (!user) return;
+
+    await deleteDoc(doc(db, 'favorites', user.uid, 'places', fsqId));
+    setFavorites(prev => prev.filter(place => place.id !== fsqId));
   };
 
   return (
@@ -51,19 +128,19 @@ const CollegeCompassDash = () => {
       {/* Tab Navigation */}
       <div className="tabs">
         <div className="tab-buttons">
-          <div 
+          <div
             className={`tab ${activeTab === 'favorites' ? 'active' : ''}`}
             onClick={() => setActiveTab('favorites')}
           >
             <span className="tab-label">My Favorites</span>
           </div>
-          <div 
+          <div
             className={`tab ${activeTab === 'reviews' ? 'active' : ''}`}
             onClick={() => setActiveTab('reviews')}
           >
             <span className="tab-label">My Reviews</span>
           </div>
-          <div 
+          <div
             className={`tab ${activeTab === 'settings' ? 'active' : ''}`}
             onClick={() => setActiveTab('settings')}
           >
@@ -79,16 +156,22 @@ const CollegeCompassDash = () => {
             <div key={place.id} className="favorite-item">
               <div className="place-info">
                 <div className="place-icon">
-                  <svg className="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                  </svg>
+                  {getCategoryIcon(place.category)}
                 </div>
                 <div>
                   <div className="place-name">{place.name}</div>
+                  <a
+                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.name)} ${place.address || ''}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className='place-address'
+                  >  
+                    <p> {place.address || "Address not available"}</p>
+                  </a>
                   <div className="stars">
                     {Array.from({ length: 5 }).map((_, i) => (
                       <span key={i} className="star">
-                        {i < place.rating ? '★' : '☆'}
+                        {i < Math.floor((place.rating || 0) / 2) ? '★' : '☆'}
                       </span>
                     ))}
                   </div>

@@ -4,6 +4,7 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import logo from '../assets/logo.png';
 import './PlaceDetail.css'; 
+import { addFavorite } from './favorites';
 
 //Store all the data in these variables
 export default function PlaceDetail() {
@@ -65,6 +66,23 @@ export default function PlaceDetail() {
       setPlace(response.data);
     } catch (error) {
       console.error('Error fetching place details:', error);
+    }
+  };
+
+  const handleAddFavorite = async () => {
+    try {
+      if(!place) return;
+
+      await addFavorite ({
+        ...place,
+        rating: rating || 0
+      });
+
+      setMessage('Added tp favorites!');
+    }
+    catch (err) {
+      console.error('Error adding favorite:', err);
+      setMessage('Failed to add favorite.');
     }
   };
 
