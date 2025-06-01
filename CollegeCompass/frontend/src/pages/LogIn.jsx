@@ -70,7 +70,7 @@ export default function Login() {
     try {
       //await signInAnonymously(auth);
       setError("");
-      navigate('/');
+      navigate('/homepage');
     } catch (err) {
       setError(err.message);
     }
