@@ -76,7 +76,7 @@ describe('PlaceDetail Component - Simplified Tests', () => {
     });
     
     onAuthStateChanged.mockImplementation((auth, callback) => {
-      callback(null); // Default - no user
+      callback(null); 
       return vi.fn(); 
     });
     
@@ -186,7 +186,7 @@ describe('PlaceDetail Component - Simplified Tests', () => {
     test('displays star rating interface', () => {
       renderComponent();
       
-      // Should have 10 stars total (5 for display, 5 for interaction)
+      // Should have 10 stars total 
       const stars = screen.getAllByText('★');
       expect(stars.length).toBeGreaterThanOrEqual(5);
     });
@@ -196,9 +196,7 @@ describe('PlaceDetail Component - Simplified Tests', () => {
       
       const stars = screen.getAllByText('★');
       // Click on a star (find interactive ones)
-      fireEvent.click(stars[7]); // Try clicking on one of the later stars
-      
-      // Check if rating text appears
+      fireEvent.click(stars[7]); 
       expect(screen.getByText(/\d\/5 stars/)).toBeInTheDocument();
     });
 
