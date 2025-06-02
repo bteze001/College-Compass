@@ -28,14 +28,25 @@ export default function Homepage() {
   const [housingPlaces, setHousingPlaces] = useState([]);
   const [activityPlaces, setActivityPlaces] = useState([]);
 
-  // Get coordinates from the landing page, if it fails use UCR as default 
+  // Get coordinates from the landing page, if it fails use UCR as default
+  const savedSchool = JSON.parse(localStorage.getItem('selectedSchool')) || {};
   const { lat: passedLat, lng: passedLon, schoolName: passedSchoolName } = location.state || {};
   const defaultLat = 33.97372;
   const defaultLon = -117.32807;
 
-  const currentLat = passedLat ?? defaultLat;
-  const currentLon = passedLon ?? defaultLon;
-  const schoolName = passedSchoolName ?? "UCR";
+  const currentLat = passedLat ?? savedSchool.lat ?? defaultLat;
+  const currentLon = passedLon ?? savedSchool.lon ?? defaultLon;
+  const schoolName = passedSchoolName ?? savedSchool.name ?? "UCR";
+
+  useEffect(() => {
+    if (passedLat && passedLon && passedSchoolName) {
+      localStorage.setItem('selectedSchool', JSON.stringify({
+        lat: passedLat,
+        lon: passedLon,
+        name: passedSchoolName
+      }));
+    }
+  }, [passedLat, passedLon, passedSchoolName]);
 
   const { fetchPlaces, isLoading, error, clearCache } = usePlacesFetcher({ currentLat, currentLon });
 
@@ -159,7 +170,15 @@ export default function Homepage() {
           </div>
         ) : (
           <div className='user-controls'>
-            <button className="login-button" onClick={() => navigate('/login')}>
+            <button 
+              className="login-button" 
+              onClick={() => 
+                  navigate('/login', {
+                    state: {
+                      lat: currentLat, 
+                      lng: currentLon,
+                      schoolName: schoolName,
+              }})}>
               Log In
             </button>
             <button className="sign-up-button" onClick={() => navigate('/signup')}>

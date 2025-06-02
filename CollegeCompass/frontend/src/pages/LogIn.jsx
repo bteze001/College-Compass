@@ -55,7 +55,7 @@ export default function Login() {
       } else {
         await signInWithEmailAndPassword(auth, email, password);
         setError("");
-        navigate('/homepage');
+        navigate('/homepage', {state: location.state});
       }
     } catch (err) {
       if (!isRegistering && err.code === "auth/invalid-credential") {
@@ -70,7 +70,7 @@ export default function Login() {
     try {
       //await signInAnonymously(auth);
       setError("");
-      navigate('/homepage');
+      navigate('/homepage', {state: location.state});
     } catch (err) {
       setError(err.message);
     }

@@ -122,7 +122,16 @@ const CollegeCompassDash = () => {
       {/* Logo and Edit Profile button */}
       <div className="dashboard-header">
         <img src={logo} alt="College Compass Logo" className="dashboard-logo" />
-        <button className='back' onClick={() => navigate('/homepage')}> Home </button>
+        <button className='back' onClick={() => {
+          const savedSchool = JSON.parse(localStorage.getItem('selectedSchool')) || {};
+          navigate('/homepage', {
+            state: {
+              lat: savedSchool.lat,
+              lng: savedSchool.lon,
+              schoolName: savedSchool.name
+            }
+          });
+        }} > Home </button>
       </div>
 
       {/* User info section */}
