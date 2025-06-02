@@ -41,7 +41,7 @@ export default function usePlacesFetcher({currentLat, currentLon}) {
 
                 headers: {
                     Accept: 'application/json',
-                    Authorization: `${import.meta.env.VITE_API_KEY}`,
+                    Authorization: import.meta.env.VITE_API_KEY,
                 },
                 
                 params: {
@@ -50,7 +50,7 @@ export default function usePlacesFetcher({currentLat, currentLon}) {
                     categories: category,
                     radius: distance * 1609,
                     limit: 50,
-                    fields: 'fsq_id,name,location,categories,geocodes,photos,price,distance',
+                    fields: 'fsq_id,name,location,categories,geocodes,photos,price,distance,rating',
                 },
             });
 
@@ -70,5 +70,10 @@ export default function usePlacesFetcher({currentLat, currentLon}) {
         }
     };
 
-    return {fetchPlaces, isLoading, error};
+    const clearCache = () => {
+        cacheRef.current = {};
+        localStorage.removeItem('placesCache');
+    }
+
+    return {fetchPlaces, isLoading, error, clearCache};
 }
