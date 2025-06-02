@@ -1,9 +1,10 @@
-import coffeeShops from '../assets/coffeeShop.webp';
-import park from '../assets/park.webp';
 import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { auth, db } from '../firebase';
+import { setDoc, deleteDoc, getDocs, collection, doc } from 'firebase/firestore';
+import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import placeholder from '../assets/place-hold.jpg';
-import './PlacesList.css'
-//import { a } from 'vitest/dist/chunks/suite.d.FvehnV49.js';
+import './PlacesList.css';
 
 export default function PlacesList({ category, foodPlaces, housingPlaces,
     activityPlaces, currentLat, currentLon,
@@ -11,6 +12,57 @@ export default function PlacesList({ category, foodPlaces, housingPlaces,
     selectedFoodType, selectedHousingType, selectedActivityType, schoolName }) {
 
     const navigate = useNavigate();
+    const [favoritePlaceIds, setFavoritePlaceIds] = useState(new Set());
+
+    useEffect(() => {
+
+        const fetchFavorites = async () => {
+            const user = auth.currentUser;
+            if (!user) return;
+
+            const snapshot = await getDocs(collection(db, 'favorites', user.uid, 'places'));
+            const ids = new Set();
+            snapshot.forEach(doc => {
+                ids.add(doc.id);
+            });
+            setFavoritePlaceIds(ids);
+        };
+
+        fetchFavorites();
+    }, []);
+
+    const handleToggleFavorites = async (place) => {
+
+        const user = auth.currentUser;
+        if (!user) {
+            alert("Please log in to favorite places.");
+            return;
+        }
+
+        const ref = doc(db, 'favorites', user.uid, 'places', place.fsq_id);
+
+        if (favoritePlaceIds.has(place.fsq_id)) {
+            await deleteDoc(ref);
+            setFavoritePlaceIds(prev => {
+                const newSet = new Set(prev);
+                newSet.delete(place.fsq_id);
+                return newSet;
+            });
+        }
+
+        else {
+            await setDoc(ref, {
+                name: place.name,
+                rating: place.rating || 0,
+                category: place.categories?.[0]?.name || '',
+                address: place.location?.address || '',
+                photo: place.photos?.[0] ? `${place.photos[0].prefix}original${place.photos[0].suffix}` : '',
+                fsq_id: place.fsq_id
+            });
+
+            setFavoritePlaceIds(prev => new Set(prev).add(place.fsq_id));
+        }
+    };
 
     //Takes the place object and converts to a string and saves to localstorage
     const handlePlaceClick = (place) => {
@@ -100,7 +152,25 @@ export default function PlacesList({ category, foodPlaces, housingPlaces,
                         alt={place.name}
                         className="place-photo"
                     />
-                    <h3>{place.name}</h3>
+                    <div className='place-header'>
+                        <h3 className='place-title'> {place.name} </h3>
+                        <span
+                            className='heart-icon'
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleToggleFavorites(place);
+                            }}
+                        >
+                            {favoritePlaceIds.has(place.fsq_id) ? (
+
+                                <FaHeart color='#EF4444' />
+                            ) : (
+
+                                <FaRegHeart color='#9CA3AF' />
+
+                            )}
+                        </span>
+                    </div>
                     {place.geocodes?.main ? (
                         <a
                             href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.name)} ${place.location.address || ''}`}
@@ -173,7 +243,25 @@ export default function PlacesList({ category, foodPlaces, housingPlaces,
                     alt={place.name}
                     className="place-photo"
                 />
-                <h3>{place.name}</h3>
+                <div className='place-header'>
+                    <h3 className='place-title'> {place.name} </h3>
+                    <span
+                        className='heart-icon'
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            handleToggleFavorites(place);
+                        }}
+                    >
+                        {favoritePlaceIds.has(place.fsq_id) ? (
+
+                            <FaHeart color='#EF4444' />
+                        ) : (
+
+                            <FaRegHeart color='#9CA3AF' />
+
+                        )}
+                    </span>
+                </div>
                 {place.geocodes?.main ? (
                     <a
                         href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.name)} ${place.location.address || ''}`}
@@ -258,7 +346,25 @@ export default function PlacesList({ category, foodPlaces, housingPlaces,
                         alt={place.name}
                         className="place-photo"
                     />
-                    <h3>{place.name}</h3>
+                    <div className='place-header'>
+                        <h3 className='place-title'> {place.name} </h3>
+                        <span
+                            className='heart-icon'
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleToggleFavorites(place);
+                            }}
+                        >
+                            {favoritePlaceIds.has(place.fsq_id) ? (
+
+                                <FaHeart color='#EF4444' />
+                            ) : (
+
+                                <FaRegHeart color='#9CA3AF' />
+
+                            )}
+                        </span>
+                    </div>
                     {place.geocodes?.main ? (
                         <a
                             href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.name)} ${place.location.address || ''}`}

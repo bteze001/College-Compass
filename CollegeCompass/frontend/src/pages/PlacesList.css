@@ -3,3 +3,21 @@
     margin-top: 10px;
     margin-bottom: 10px;
 }
+
+.place-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+.heart-icon {
+    cursor: pointer;
+    margin-left: 15px;
+    font-size: 1.1rem;
+    margin-top: 5px;
+}
+
+.place-title {
+    margin: 0;
+    font-size: 1.1rem;
+}
