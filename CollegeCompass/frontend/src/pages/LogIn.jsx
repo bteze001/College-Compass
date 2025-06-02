@@ -103,21 +103,21 @@ export default function Login() {
 
         {isRegistering && (
           <>
-            <label>Username</label>
-            <input type="text" ref={usernameRef} required />
+            <label htmlFor="username">Username</label>
+            <input id='username' type="text" ref={usernameRef} required />
           </>
         )}
 
-        <label>School Email</label>
-        <input type="email" ref={emailRef} required />
+        <label htmlFor="email">School Email</label>
+        <input id="email" type="email" ref={emailRef} required />
 
-        <label>Password</label>
-        <input type="password" ref={passwordRef} required />
+        <label htmlFor="password">Password</label>
+        <input id="password" type="password" ref={passwordRef} required />
 
         {isRegistering && (
           <>
-            <label>Confirm Password</label>
-            <input type="password" ref={confirmPasswordRef} required />
+            <label htmlFor="confirmPassword">Confirm Password</label>
+            <input id="confirmPassword" type="password" ref={confirmPasswordRef} required />
           </>
         )}
 
