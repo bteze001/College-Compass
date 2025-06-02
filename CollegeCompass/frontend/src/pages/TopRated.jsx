@@ -65,15 +65,26 @@ export default function TopRated({ allPlaces }) {
                   className="top-rated-photo"
                 />
                 <div className="top-rated-content">
-                  <p className="top-rated-name">{place.name}</p>
-                  <p className="top-rated-address">{place.location?.address || 'Address not available'}</p>
-                  <div className="top-rated-stars">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <span key={i} className="star">
-                        {i < Math.round(entry.avgRating) ? '★' : '☆'}
-                      </span>
-                    ))}
-                  </div>
+                    <p className="top-rated-name">{place.name}</p>
+
+                    <p className="top-rated-address">
+                        <a
+                        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.name)} ${encodeURIComponent(place.location?.address || '')}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="map-link"
+                        >
+                        {place.location?.address || 'Address not available'}
+                        </a>
+                    </p>
+
+                    <div className="top-rated-stars">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                        <span key={i} className="star">
+                            {i < Math.round(entry.avgRating) ? '★' : '☆'}
+                        </span>
+                        ))}
+                    </div>
                 </div>
               </div>
             );

@@ -10,6 +10,7 @@ import { getAuth, signOut } from 'firebase/auth';
 import { User } from 'lucide-react';
 import search from '../assets/search-icon.png';
 import logo from '../assets/logo.png';
+import schoolData from '../data/Data.json';
 import compass from '../assets/compass.png';
 import './Homepage.css';
 import axios from 'axios';
@@ -38,6 +39,8 @@ export default function Homepage() {
   const currentLat = passedLat ?? defaultLat;
   const currentLon = passedLon ?? defaultLon;
   const schoolName = passedSchoolName ?? "UCR";
+
+  const schoolDisplayName = schoolData.find(school => school.fullName === schoolName)?.name || schoolName;
 
   const { fetchPlaces, isLoading, error, clearCache } = usePlacesFetcher({ currentLat, currentLon });
 
@@ -159,6 +162,9 @@ const fetchTopRated = async () => {
             <button className="dashboard-button-2" onClick={handleDashboardClick}>Dashboard</button>
           </div>
         )}
+    
+
+        <h1 className="welcome-message"> Welcome to {schoolDisplayName}</h1>
 
         <div className="category-buttons">
           <button className={`food-spots-button ${category === 'food' ? 'active' : ''}`} onClick={handleFoodFetch}>Food</button>

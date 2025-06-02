@@ -131,31 +131,38 @@ body, html {
   background-color: #d1d5db;
 }
 
+
 .category-buttons button.active {
   background-color: #cb9aff;
   border: none;
-  
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(203, 154, 255, 0.5);
+  transform: scale(1.03);
+  transition: all 0.2s ease-in-out;
+  font-family: 'Poppins', sans-serif;
 }
 
 .food-spots-button {
   position: fixed;
   width: 440px;
-  padding: 8px;
+  padding: 10px 16px;
   top: 100px;
   left: 50px;
   font-size: 1rem;
-  border: none;
-  border-radius: 6px;
-  border: 1px solid;
-  border-color: #d1d5db;
+  border-radius: 8px;
   background-color: #f3e8ff;
   color: #6b21a8;
-  font-weight: bold;
+  font-weight: 600;
   cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  border: 1px solid #d1d5db;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease-in-out;
 }
 
 .food-spots-button.food-spots-button:hover {
-  background-color:#e9d5ff;
+  background-color: #e9d5ff;
+  transform: translateY(-2px);
 }
 
 .housing-button {
@@ -182,20 +189,21 @@ body, html {
 .activities-button {
   position: fixed;
   top: 100px;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 0;
+  right: 0;
+  margin: 0 auto;
   width: 440px;
   padding: 8px;
   font-size: 1rem;
   border: none;
   border-radius: 6px;
-  border: 1px solid;
-  border-color: #d1d5db;
+  border: 1px solid #d1d5db;
   background-color: #f3e8ff;
   color: #6b21a8;
   font-weight: bold;
   cursor: pointer;
 }
+
 
 .activities-button.activities-button:hover {
   background-color:#e9d5ff;
@@ -207,20 +215,24 @@ body, html {
   right: 100px;
   width: 150px;
   height: 40px;
-  font-size: 18px;
+  font-size: 16px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
   border: none;
-  border-radius: 6px;
-  border: 1px solid;
-  border-color: #d1d5db;
+  border-radius: 8px;
   background-color: #f3e8ff;
   color: #6b21a8;
-  font-weight: bold;
   cursor: pointer;
+  border: 1px solid #d1d5db;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease-in-out;
 }
 
 .filter-button.filter-button:hover {
   background-color: #e9d5ff;
+  transform: translateY(-2px);
 }
+
 
 .places-container {
   margin-top: 60px; /*changes the distance between slider distance and places */
@@ -586,3 +598,47 @@ p {
   font-size: 1rem;
 }
 
+.welcome-message {
+  font-size: 36px;
+  font-weight: 800;
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  
+  background: linear-gradient(to right, #0f0f0f, #bca0b1);
+  background-clip: text;                /* ✅ Standard version */
+  -webkit-background-clip: text;        /* ✅ Safari/Chrome fallback */
+  -webkit-text-fill-color: transparent;
+
+  opacity: 0;
+  transform: translateY(-10px);
+  animation: fadeInSlideDown 1.2s ease-out forwards;
+}
+
+@keyframes fadeInSlideDown {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* Fix category button shift */
+.category-buttons button {
+  width: 440px;
+  height: 48px;
+  transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.category-buttons button.active {
+  background-color: #cb9aff;
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(203, 154, 255, 0.5);
+  /* Removed transform: scale(1.03); */
+  transform: translateY(-1px); /* Optional smooth effect */
+}
+
+/* Ensure dashboard / logout buttons are clickable */
+.dashboard-button,
+.logout-button,
+.sign-up-button {
+  z-index: 1001;
+}
