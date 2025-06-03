@@ -49,7 +49,7 @@ describe('UserDashboard Component', () => {
     await act(async () => renderComponent());
     
     fireEvent.click(screen.getByText('Home'));
-    expect(mockNavigate).toHaveBeenCalledWith('/homepage');
+    expect(mockNavigate).toHaveBeenCalledWith('/homepage', expect.anything());
   });
 
   test('fetches data on mount', async () => {
