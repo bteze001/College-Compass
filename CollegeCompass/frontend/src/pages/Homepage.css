@@ -22,7 +22,7 @@ body, html {
   background-position: center;  
   background-repeat: no-repeat; */
   z-index: 999;
-  padding-bottom: 180px; 
+  padding-bottom: 140px; 
   pointer-events: none; 
 }
 
@@ -250,8 +250,8 @@ body, html {
   align-items: center;
   background: #ffffff;
   border: 1px solid #d1d5db;
-  height: 300px;
-  width: 300px;
+  height: 350px;
+  width: 350px;
   margin-bottom: 10px;
   border-radius: 16px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
