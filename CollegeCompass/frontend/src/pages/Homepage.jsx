@@ -32,6 +32,8 @@ export default function Homepage() {
   const [activityPlaces, setActivityPlaces] = useState([]);
   const [topRatedPlaces, setTopRatedPlaces] = useState([]);
 
+  const [filtersVisible, setFiltersVisible] = useState(true);
+
   // Get coordinates from the landing page, if it fails use UCR as default
   const savedSchool = JSON.parse(localStorage.getItem('selectedSchool')) || {};
   const { lat: passedLat, lng: passedLon, schoolName: passedSchoolName } = location.state || {};
@@ -61,15 +63,15 @@ export default function Homepage() {
     fetchTopRated();
   }, []);
 
-const fetchTopRated = async () => {
-  try {
-    const response = await axios.get('http://localhost:5000/api/top-rated');
-    console.log('🔥 Top Rated API Response:', response.data);  // <-- Add this
-    setTopRatedPlaces(response.data);
-  } catch (err) {
-    console.error('❌ Failed to fetch top-rated places:', err);
-  }
-};
+  const fetchTopRated = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/top-rated');
+      console.log('🔥 Top Rated API Response:', response.data);  // <-- Add this
+      setTopRatedPlaces(response.data);
+    } catch (err) {
+      console.error('❌ Failed to fetch top-rated places:', err);
+    }
+  };
 
 
   const handleChange = (e) => {
@@ -169,15 +171,16 @@ const fetchTopRated = async () => {
           </div>
         ) : (
           <div className='user-controls'>
-            <button 
-              className="login-button" 
-              onClick={() => 
-                  navigate('/login', {
-                    state: {
-                      lat: currentLat, 
-                      lng: currentLon,
-                      schoolName: schoolName,
-              }})}>
+            <button
+              className="login-button"
+              onClick={() =>
+                navigate('/login', {
+                  state: {
+                    lat: currentLat,
+                    lng: currentLon,
+                    schoolName: schoolName,
+                  }
+                })}>
               Log In
             </button>
             <button className="sign-up-button" onClick={() => navigate('/signup')}>
@@ -188,7 +191,7 @@ const fetchTopRated = async () => {
             </button>
           </div>
         )}
-        
+
         <h1 className="welcome-message"> Welcome to {schoolDisplayName}</h1>
 
         <div className="category-buttons">
@@ -240,10 +243,18 @@ const fetchTopRated = async () => {
         {isLoading && <div className='loading'> Loading Places ... </div>}
         {error && <div className='error-message'>{error}</div>}
 
-        <TopRated
+        {/* <TopRated
           topRatedPlaces={topRatedPlaces}
           allPlaces={[...foodPlaces, ...housingPlaces, ...activityPlaces]}
-        />
+        /> */}
+
+        {!showFilters && (
+          <TopRated
+            topRatedPlaces={topRatedPlaces}
+            allPlaces={[...foodPlaces, ...housingPlaces, ...activityPlaces]}
+          />
+        )}
+
 
         <div className='places-container'>
           <PlacesList
