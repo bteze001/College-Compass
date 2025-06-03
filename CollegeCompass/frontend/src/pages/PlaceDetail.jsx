@@ -248,7 +248,7 @@ export default function PlaceDetail() {
     try {
       const ratingData = {
         placeId,
-        placeName: place?.name || 'Unknown',  // <-- Add this line
+        placeName: place?.name || 'Unknown',  
         userId: user.uid,
         userName: user.displayName || 'Anonymous',
         userEmail: user.email,
