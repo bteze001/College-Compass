@@ -29,11 +29,15 @@ export default function TopRated({ allPlaces }) {
       });
 
       top.sort((a, b) => b.avgRating - a.avgRating);
-      setTopRated(top.slice(0, 5));
+      setTopRated(top); // ← No .slice!
     };
 
     fetchRatings();
   }, []);
+
+  const displayList = topRated.length <= 5
+    ? [...topRated, ...topRated]
+    : topRated;
 
   if (!topRated.length) return null;
 
@@ -42,7 +46,7 @@ export default function TopRated({ allPlaces }) {
       <h2 className="top-rated-title">⭐ Top Rated</h2>
       <div className="top-rated-marquee">
         <div className="top-rated-cards marquee-track">
-          {[...topRated, ...topRated].map((entry, idx) => {
+          {displayList.map((entry, idx) => {
             const place = allPlaces.find(p => p.fsq_id === entry.placeId);
             if (!place) return null;
 
@@ -59,32 +63,26 @@ export default function TopRated({ allPlaces }) {
                   navigate(`/place/${place.fsq_id}`);
                 }}
               >
-                <img
-                  src={photo}
-                  alt={place.name}
-                  className="top-rated-photo"
-                />
+                <img src={photo} alt={place.name} className="top-rated-photo" />
                 <div className="top-rated-content">
-                    <p className="top-rated-name">{place.name}</p>
-
-                    <p className="top-rated-address">
-                        <a
-                        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.name)} ${encodeURIComponent(place.location?.address || '')}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="map-link"
-                        >
-                        {place.location?.address || 'Address not available'}
-                        </a>
-                    </p>
-
-                    <div className="top-rated-stars">
-                        {Array.from({ length: 5 }).map((_, i) => (
-                        <span key={i} className="star">
-                            {i < Math.round(entry.avgRating) ? '★' : '☆'}
-                        </span>
-                        ))}
-                    </div>
+                  <p className="top-rated-name">{place.name}</p>
+                  <p className="top-rated-address">
+                    <a
+                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.name)} ${encodeURIComponent(place.location?.address || '')}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="map-link"
+                    >
+                      {place.location?.address || 'Address not available'}
+                    </a>
+                  </p>
+                  <div className="top-rated-stars">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <span key={i} className="star">
+                        {i < Math.round(entry.avgRating) ? '★' : '☆'}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
             );

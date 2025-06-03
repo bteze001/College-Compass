@@ -39,8 +39,12 @@ body, html {
   justify-content: center;
   gap: 80px;
   flex-wrap: wrap; 
+  margin-top: 140px;  /* 👈 Add this */
   margin-bottom: 10px;
+  position: relative; /* 👈 Just in case positioning context is needed */
+  z-index: 1;
 }
+
 .logo {
   position: fixed;
   top: 10px;
@@ -211,7 +215,7 @@ body, html {
 
 .filter-button {
   position: fixed;
-  top: 180px;
+  top: 220px;
   right: 100px;
   width: 150px;
   height: 40px;
@@ -317,11 +321,9 @@ body, html {
   
   .search-bar-wrapper {
     position: fixed;
-    align-items: center;
-    gap: 10px;
-    top: 180px;
+    top: 160px; /* slightly higher to make space */
     left: 50px;
-    z-index: 1000;
+    z-index: 1000; /* keep above most content */
     width: 1050px;
   }
 
