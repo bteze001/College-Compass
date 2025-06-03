@@ -122,7 +122,7 @@ export default function PlaceDetail() {
     try {
       const ratingsRef = collection(firestore, 'ratings');
       
-      // Try with orderBy first - then fall back to simple query if index doesn't exist(I made it so it should)
+      // Try with 1. orderBy first - if index doesn't exist use query(it should)
       let q;
       try {
         q = query(
