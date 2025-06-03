@@ -93,7 +93,7 @@ Then visit: `http://localhost:5173`
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```bash
 College-Compass/
@@ -116,11 +116,11 @@ College-Compass/
 
 ## Testing & Validation
 
-- [x] Filters apply correctly based on distance and budget
-- [x] Foursquare API returns valid and relevant places
-- [x] Firebase Auth handles guest, register, and login flows
-- [x] Dashboard saves and renders user-specific data
-- [x] Frontend & backend communicate via Axios and routes
+- Filters apply correctly based on distance and budget
+- Foursquare API returns valid and relevant places
+- Firebase Auth handles guest, register, and login flows
+- Dashboard saves and renders user-specific data
+- Frontend & backend communicate via Axios and routes
 
 ---
 
