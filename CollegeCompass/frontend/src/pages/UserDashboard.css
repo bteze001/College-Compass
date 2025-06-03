@@ -126,20 +126,20 @@
   text-align: left;
 }
 
-.rating-number {
-  margin-right: 30px;
-  margin-top: 10px;
-}
-
 .review-comment {
   font-style: italic;
   margin-top: 6px;
   text-align: left;
 }
 
-.review-date {
+.review-date, .rating-number{
 
-  margin-right: 30px;
+  text-align: left;
+}
+
+.rating-number{
+  display: block;
+  text-align: left;
 }
 
 .star {
