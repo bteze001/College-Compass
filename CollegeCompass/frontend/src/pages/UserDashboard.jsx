@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Trash, Home, Utensils, MapPin } from 'lucide-react';
 import { db, auth } from '../firebase';
-import { getDocs, collection, deleteDoc, doc } from 'firebase/firestore';
+import { getDocs, collection, deleteDoc, doc, query, where } from 'firebase/firestore';
 import './UserDashboard.css';
 import AccountSettings from './AccountSettings';
 import useCurrentUser from './useCurrentUser';
@@ -11,20 +11,13 @@ import logo from '../assets/logo.png';
 const CollegeCompassDash = () => {
   const [activeTab, setActiveTab] = useState('favorites');
 
-  // const [favorites, setFavorites] = useState([
-  //   { id: 1, name: 'Place Name', rating: 3 },
-  //   { id: 2, name: 'Place Name', rating: 4 },
-  //   { id: 3, name: 'Place Name', rating: 3 }
-  // ]);
-
   const [favorites, setFavorites] = useState([]);
+  const [reviews, setReviews] = useState([]);
   const { user, username } = useCurrentUser();
   const navigate = useNavigate();
 
   useEffect(() => {
-
     const fetchFavorites = async () => {
-
       if (!user) return;
 
       const snapshot = await getDocs(collection(db, 'favorites', user.uid, 'places'));
@@ -54,7 +47,30 @@ const CollegeCompassDash = () => {
       setFavorites(dataWithRatings);
     };
 
+    const fetchReviews = async () => {
+      if (!user) return;
+
+      try {
+        const reviewsQuery = query(
+          collection(db, 'ratings'),
+          where('userId', '==', user.uid)
+        );
+        
+        const snapshot = await getDocs(reviewsQuery);
+        const reviewsData = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+
+        console.log('Fetched reviews:', reviewsData);
+        setReviews(reviewsData);
+      } catch (error) {
+        console.error('Error fetching reviews:', error);
+      }
+    };
+
     fetchFavorites();
+    fetchReviews();
   }, [user]);
 
   const getCategoryIcon = (category) => {
@@ -107,13 +123,34 @@ const CollegeCompassDash = () => {
     return place.rating || 0;
   };
   
-
   const handleDelete = async (fsqId) => {
-
     if (!user) return;
 
     await deleteDoc(doc(db, 'favorites', user.uid, 'places', fsqId));
     setFavorites(prev => prev.filter(place => place.id !== fsqId));
+  };
+
+  const handleDeleteReview = async (reviewId) => {
+    if (!user) return;
+
+    try {
+      await deleteDoc(doc(db, 'ratings', reviewId));
+      setReviews(prev => prev.filter(review => review.id !== reviewId));
+    } catch (error) {
+      console.error('Error deleting review:', error);
+    }
+  };
+
+  const formatDate = (timestamp) => {
+    if (!timestamp) return 'Date not available';
+    
+    // Handle Firebase timestamp
+    if (timestamp.toDate) {
+      return timestamp.toDate().toLocaleDateString();
+    }
+    
+    // Handle regular date
+    return new Date(timestamp).toLocaleDateString();
   };
 
   return (
@@ -196,7 +233,6 @@ const CollegeCompassDash = () => {
                   <div className="stars">
                     {Array.from({ length: 5 }).map((_, i) => (
                       <span key={i} className="star">
-                        {/* {i < Math.floor((place.rating || 0) / 2) ? '★' : '☆'} */}
                         {i < Math.floor(getRatings(place)) ? '★' : '☆'}
                       </span>
                     ))}
@@ -213,8 +249,44 @@ const CollegeCompassDash = () => {
 
       {/* My Reviews */}
       {activeTab === 'reviews' && (
-        <div className="reviews-placeholder">
-          Your reviews will appear here
+        <div className="reviews-list">
+          {reviews.length === 0 ? (
+            <div className="reviews-placeholder">
+              Your reviews will appear here
+            </div>
+          ) : (
+            reviews.map((review) => (
+              <div key={review.id} className="review-item">
+                <div className="review-info">
+                  <div className="place-icon">
+                    {getCategoryIcon(review.placeCategory)}
+                  </div>
+                  <div className="review-details">
+                    <div className="place-name">{review.placeName || 'Unknown Place'}</div>
+                    <div className="review-rating">
+                      <div className="stars">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                          <span key={i} className="star">
+                            {i < review.rating ? '★' : '☆'}
+                          </span>
+                        ))}
+                      </div>
+                      <span className="rating-number">({review.rating}/5)</span>
+                    </div>
+                    {review.comment && (
+                      <div className="review-comment">"{review.comment}"</div>
+                    )}
+                    <div className="review-date">
+                      {formatDate(review.createdAt || review.timestamp)}
+                    </div>
+                  </div>
+                </div>
+                <button onClick={() => handleDeleteReview(review.id)} className="delete-button">
+                  <Trash color="#B91C1C" size={24} />
+                </button>
+              </div>
+            ))
+          )}
         </div>
       )}
 
