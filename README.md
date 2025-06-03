@@ -138,4 +138,3 @@ College-Compass/
 ## 📌 License
 
 This project is for educational purposes only. © 2025 College Compass Team
-
