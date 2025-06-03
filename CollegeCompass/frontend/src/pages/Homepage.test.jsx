@@ -135,7 +135,7 @@ describe('Homepage Component Tests', () => {
 
     test('Clicking Activities button fetches activity places', async () => {
         render(<Homepage />);
-        fireEvent.click(screen.getByRole('button', { name: /activites/i }));
+        fireEvent.click(screen.getByRole('button', { name: /activities/i }));
         await waitFor(() => expect(mockFetchPlaces).toHaveBeenCalledWith('activity', '', 10, 100, 'all'));
     });
 

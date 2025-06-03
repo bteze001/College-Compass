@@ -5,12 +5,15 @@ import FilterSliders from './FilterSliders';
 import PlacesList from './PlacesList';
 import SearchFilter from '../../../backend/SearchFilter';
 import useCurrentUser from './useCurrentUser';
+import TopRated from './TopRated'; // adjust path if needed
 import { getAuth, signOut } from 'firebase/auth';
-import { User } from 'lucide-react'
+import { User } from 'lucide-react';
 import search from '../assets/search-icon.png';
 import logo from '../assets/logo.png';
+import schoolData from '../data/Data.json';
 import compass from '../assets/compass.png';
 import './Homepage.css';
+import axios from 'axios';
 
 export default function Homepage() {
   const navigate = useNavigate();
@@ -27,6 +30,7 @@ export default function Homepage() {
   const [foodPlaces, setFoodPlaces] = useState([]);
   const [housingPlaces, setHousingPlaces] = useState([]);
   const [activityPlaces, setActivityPlaces] = useState([]);
+  const [topRatedPlaces, setTopRatedPlaces] = useState([]);
 
   // Get coordinates from the landing page, if it fails use UCR as default
   const savedSchool = JSON.parse(localStorage.getItem('selectedSchool')) || {};
@@ -48,11 +52,25 @@ export default function Homepage() {
     }
   }, [passedLat, passedLon, passedSchoolName]);
 
+  const schoolDisplayName = schoolData.find(school => school.fullName === schoolName)?.name || schoolName;
+
   const { fetchPlaces, isLoading, error, clearCache } = usePlacesFetcher({ currentLat, currentLon });
 
   useEffect(() => {
-    handleFoodFetch(); 
+    handleFoodFetch();
+    fetchTopRated();
   }, []);
+
+const fetchTopRated = async () => {
+  try {
+    const response = await axios.get('http://localhost:5000/api/top-rated');
+    console.log('🔥 Top Rated API Response:', response.data);  // <-- Add this
+    setTopRatedPlaces(response.data);
+  } catch (err) {
+    console.error('❌ Failed to fetch top-rated places:', err);
+  }
+};
+
 
   const handleChange = (e) => {
     setQuery(e.target.value);
@@ -73,14 +91,11 @@ export default function Homepage() {
   };
 
   const handleDashboardClick = () => {
-
     const auth = getAuth();
     const user = auth.currentUser;
-
     if (user) {
       navigate('/dashboard');
-    }
-    else {
+    } else {
       alert("Please login first to access the dashboard.");
       navigate('/login');
     }
@@ -95,29 +110,20 @@ export default function Homepage() {
 
   const toggleFilters = () => {
     setshowFilters(!showFilters);
-  }
+  };
 
   const filterBySearchQuery = () => {
     const lowercaseQuery = query.toLowerCase();
-
     if (category === 'food') {
-      const filtered = foodPlaces.filter(place =>
-        place.name.toLowerCase().includes(lowercaseQuery)
-      );
+      const filtered = foodPlaces.filter(place => place.name.toLowerCase().includes(lowercaseQuery));
       setFoodPlaces(filtered);
     }
-
     if (category === 'housing') {
-      const filtered = housingPlaces.filter(place =>
-        place.name.toLowerCase().includes(lowercaseQuery)
-      );
+      const filtered = housingPlaces.filter(place => place.name.toLowerCase().includes(lowercaseQuery));
       setHousingPlaces(filtered);
     }
-
     if (category === 'activity') {
-      const filtered = activityPlaces.filter(place =>
-        place.name.toLowerCase().includes(lowercaseQuery)
-      );
+      const filtered = activityPlaces.filter(place => place.name.toLowerCase().includes(lowercaseQuery));
       setActivityPlaces(filtered);
     }
   };
@@ -146,27 +152,20 @@ export default function Homepage() {
   return (
     <>
       <div className="fixed-header">
-      <img
-        src={logo}
-        alt="collegeCompass"
-        className="logo"
-        onClick={() => navigate('/')}
-        style={{ cursor: 'pointer' }}
-      />
-          {currentUser ? (
+        <img
+          src={logo}
+          alt="collegeCompass"
+          className="logo"
+          onClick={() => navigate('/')}
+          style={{ cursor: 'pointer' }}
+        />
+        {currentUser ? (
           <div className='user-controls'>
             <span className="username">
-              <User
-                size={22}
-                style={{ marginRight: '8px', verticalAlign: 'bottom' }}
-              /> {username}
+              <User size={22} style={{ marginRight: '8px', verticalAlign: 'bottom' }} /> {username}
             </span>
-            <button className="logout-button" onClick={handleLogout}>
-              Logout
-            </button>
-            <button className="dashboard-button" onClick={handleDashboardClick}>
-              Dashboard
-            </button>
+            <button className="logout-button" onClick={handleLogout}>Logout</button>
+            <button className="dashboard-button" onClick={handleDashboardClick}>Dashboard</button>
           </div>
         ) : (
           <div className='user-controls'>
@@ -189,18 +188,13 @@ export default function Homepage() {
             </button>
           </div>
         )}
+        
+        <h1 className="welcome-message"> Welcome to {schoolDisplayName}</h1>
 
         <div className="category-buttons">
-          <button className={`food-spots-button ${category === 'food' ? 'active' : ''}`} onClick={handleFoodFetch}>
-            Food
-          </button>
-          <button className={`activities-button ${category === 'activity' ? 'active' : ''}`}onClick={handleActivityFetch}>
-            Activites
-          </button>
-          <button className={`housing-button ${category === 'housing' ? 'active' : ''}`} onClick={handleHousingFetch}>
-            Housing
-          </button>
-
+          <button className={`food-spots-button ${category === 'food' ? 'active' : ''}`} onClick={handleFoodFetch}>Food</button>
+          <button className={`activities-button ${category === 'activity' ? 'active' : ''}`} onClick={handleActivityFetch}>Activities</button>
+          <button className={`housing-button ${category === 'housing' ? 'active' : ''}`} onClick={handleHousingFetch}>Housing</button>
         </div>
 
         <div className="search-bar-wrapper">
@@ -225,6 +219,7 @@ export default function Homepage() {
         </button>
       </div>
 
+
       <div className='content'>
         {showFilters && (
           <FilterSliders
@@ -244,6 +239,11 @@ export default function Homepage() {
 
         {isLoading && <div className='loading'> Loading Places ... </div>}
         {error && <div className='error-message'>{error}</div>}
+
+        <TopRated
+          topRatedPlaces={topRatedPlaces}
+          allPlaces={[...foodPlaces, ...housingPlaces, ...activityPlaces]}
+        />
 
         <div className='places-container'>
           <PlacesList

@@ -87,6 +87,7 @@ test('Successful login with correct credentials', async () => {
 
 // test 4: login error
 test('Invalid login shows error', async () => {
+
   signInWithEmailAndPassword.mockRejectedValue({ code: 'auth/invalid-credential' });
 
   renderWithRouter(<Login />);
@@ -97,10 +98,12 @@ test('Invalid login shows error', async () => {
   fireEvent.click(screen.getByRole('button', { name: 'Login' }));
 
   expect(await screen.findByText(/Invalid Login/i)).toBeInTheDocument();
+  
 });
 
 // test 5: guest login
 test('Guest login navigates to homepage without calling signInAnonymously', async () => {
+
   const navigateMock = vi.fn();
   useNavigate.mockReturnValue(navigateMock); // mock the navigate function
 
@@ -111,5 +114,6 @@ test('Guest login navigates to homepage without calling signInAnonymously', asyn
   await waitFor(() => {
     expect(navigateMock).toHaveBeenCalledWith('/homepage', expect.anything());
   });
+
 });
 
