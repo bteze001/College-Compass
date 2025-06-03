@@ -80,21 +80,23 @@
   border-radius: 9999px;
 }
 
-/*Favorite list section*/
-.favorites-list {
+.favorites-list, .reviews-list{
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-/*Favorite item details */
-.favorite-item {
+.favorite-item, .reviews-list .review-item {
   border: 2px solid #e5e7eb;
   border-radius: 8px;
   padding: 16px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.reviews-list .review-item {
+  background-color: #eef5ff;
 }
 
 .place-info {
@@ -122,6 +124,22 @@
 
 .place-address, .place-address p{
   text-align: left;
+}
+
+.rating-number {
+  margin-right: 30px;
+  margin-top: 10px;
+}
+
+.review-comment {
+  font-style: italic;
+  margin-top: 6px;
+  text-align: left;
+}
+
+.review-date {
+
+  margin-right: 30px;
 }
 
 .star {

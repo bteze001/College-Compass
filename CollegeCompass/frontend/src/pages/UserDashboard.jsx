@@ -257,9 +257,9 @@ const CollegeCompassDash = () => {
           ) : (
             reviews.map((review) => (
               <div key={review.id} className="review-item">
-                <div className="review-info">
+                <div className="place-info">
                   <div className="place-icon">
-                    {getCategoryIcon(review.placeCategory)}
+                    {getCategoryIcon(review.category)}
                   </div>
                   <div className="review-details">
                     <div className="place-name">{review.placeName || 'Unknown Place'}</div>
