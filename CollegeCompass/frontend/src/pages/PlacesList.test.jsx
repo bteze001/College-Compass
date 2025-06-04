@@ -440,3 +440,64 @@ it('filters by subcategory "apartments"', () => {
     expect(screen.getByText('Sunset Apartments')).toBeInTheDocument();
     expect(screen.queryByText('Campus Dorm A')).not.toBeInTheDocument();
 });
+
+it('filters out places beyond the selected distance', () => {
+    const nearby = { ...baseMockPlace, name: 'Near Place', distance: 1 * 1609 };
+    const far = { ...baseMockPlace, name: 'Far Place', distance: 11 * 1609 }; // 11 miles
+  
+    render(
+      <PlacesList
+        category="housing"
+        foodPlaces={[]}
+        housingPlaces={[nearby, far]}
+        activityPlaces={[]}
+        currentLat={0}
+        currentLon={0}
+        distance={10} // limit: 10 miles
+        budget={100}
+        SearchFilter={{
+          applyDistanceFilter: (places) =>
+            places.filter((p) => p.distance / 1609 <= 10),
+          applyBudgetFilter: (places) => places,
+        }}
+        selectedFoodType=""
+        selectedHousingType="all"
+        selectedActivityType=""
+        schoolName="UCLA"
+      />
+    );
+  
+    expect(screen.getByText('Near Place')).toBeInTheDocument();
+    expect(screen.queryByText('Far Place')).not.toBeInTheDocument();
+  });
+  
+  it('filters out places beyond selected budget', () => {
+    const cheap = { ...baseMockPlace, name: 'Cheap Place', price: 2 };
+    const expensive = { ...baseMockPlace, name: 'Expensive Place', price: 5 };
+  
+    render(
+      <PlacesList
+        category="food"
+        foodPlaces={[cheap, expensive]}
+        housingPlaces={[]}
+        activityPlaces={[]}
+        currentLat={0}
+        currentLon={0}
+        distance={10}
+        budget={75} // translates to max price level 3
+        SearchFilter={{
+          applyDistanceFilter: (places) => places,
+          applyBudgetFilter: (places) =>
+            places.filter((p) => p.price != null && p.price <= 3),
+        }}
+        selectedFoodType="all"
+        selectedHousingType=""
+        selectedActivityType=""
+        schoolName="UCLA"
+      />
+    );
+  
+    expect(screen.getByText('Cheap Place')).toBeInTheDocument();
+    expect(screen.queryByText('Expensive Place')).not.toBeInTheDocument();
+  });
+  

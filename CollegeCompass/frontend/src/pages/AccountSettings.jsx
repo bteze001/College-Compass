@@ -93,7 +93,7 @@ const AccountSettings = () => {
               onChange={handleChange}
             />
             {!isEditing.username ? (
-              <FaEdit className="edit-icon" onClick={() => handleEditClick('username')} />
+              <FaEdit aria-label="edit username" className="edit-icon" onClick={() => handleEditClick('username')} />
             ) : (
               <button className="save-button" onClick={() => handleSave('username')}>Save</button>
             )}
@@ -112,7 +112,7 @@ const AccountSettings = () => {
               onChange={handleChange}
             />
             {!isEditing.email ? (
-              <FaEdit className="edit-icon" onClick={() => handleEditClick('email')} />
+              <FaEdit aria-label="edit email" className="edit-icon" onClick={() => handleEditClick('email')} />
             ) : (
               <button className="save-button" onClick={() => handleSave('email')}>Save</button>
             )}
@@ -132,7 +132,7 @@ const AccountSettings = () => {
               placeholder="Enter new password"
             />
             {!isEditing.password ? (
-              <FaEdit className="edit-icon" onClick={() => handleEditClick('password')} />
+              <FaEdit aria-label="edit password" className="edit-icon" onClick={() => handleEditClick('password')} />
             ) : (
               <button className="save-button" onClick={() => handleSave('password')}>Save</button>
             )}
