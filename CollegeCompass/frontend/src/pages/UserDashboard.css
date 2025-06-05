@@ -100,10 +100,14 @@
 .place-info {
   display: flex;
   align-items: center;
+  justify-content: space-between; /* ✅ Add this line */
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .place-icon {
-  margin-right: 16px;
+  margin-right: 30px;
+  font-size: 20px;
 }
 
 .icon {
@@ -113,6 +117,11 @@
 
 .place-name {
   font-weight: bold;
+  margin-right: 30px;
+}
+
+.place-address, .place-address p{
+  text-align: left;
 }
 
 .star {
@@ -243,4 +252,20 @@
   border-radius: 6px;
   color: white;
   margin-left: 10px;
+}
+
+.back {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  background-color: #f3e8ff;
+  color: #6b21a8;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.back:hover {
+  background-color: #e9d5ff;
 }

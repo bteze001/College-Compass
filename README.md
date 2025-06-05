@@ -1,22 +1,22 @@
-# 🌍 College Compass: UC-Me
+# College Compass: UC-Me
 
 **College Compass** is a full-stack web application designed to help college students — especially freshmen and out-of-state students — discover, rate, and save local food, housing, and activity spots around their campus. Built with React and Firebase, the app integrates Foursquare’s API to provide personalized, location-based recommendations.
 
 ---
 
-## 🚀 Features
+## Features
 
-- 🔍 **Search by UC Campus** – Begin by selecting your UC school to personalize your experience.
-- 👤 **Authentication** – Sign up, log in, or continue as a guest via Firebase Auth.
-- 🏠 **Dynamic Homepage** – View local spots for food, housing, and activities.
-- 🎛️ **Custom Filters** – Use sliders to adjust search radius and budget.
-- 📂 **Save Favorites** – Authenticated users can save and manage favorite places.
-- 🨭 **Dashboard** – Access tabs for reviews, favorites, and settings.
-- 📡 **Foursquare API Integration** – Displays real-time details including name, price, photos, and distance.
+- **Search by UC Campus** – Begin by selecting your UC school to personalize your experience.
+- **Authentication** – Sign up, log in, or continue as a guest via Firebase Auth.
+- **Dynamic Homepage** – View local spots for food, housing, and activities.
+- **Custom Filters** – Use sliders to adjust search radius and budget.
+- **Save Favorites** – Authenticated users can save and manage favorite places.
+- **Dashboard** – Access tabs for reviews, favorites, and settings.
+- **Foursquare API Integration** – Displays real-time details including name, price, photos, and distance.
 
 ---
 
-## 🩵 Tech Stack
+## Tech Stack
 
 | Frontend  | Backend | Database | API              |
 |-----------|---------|----------|------------------|
@@ -30,7 +30,7 @@
 
 ---
 
-## 🧰 System Architecture
+## System Architecture
 
 ```
 Frontend (React)
@@ -54,7 +54,7 @@ Backend (Node.js + Axios)
 
 ---
 
-## 🔧 Getting Started
+## Getting Started
 
 1. **Clone the repository**
 
@@ -93,7 +93,7 @@ Then visit: `http://localhost:5173`
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```bash
 College-Compass/
@@ -114,17 +114,17 @@ College-Compass/
 
 ---
 
-## ✅ Testing & Validation
+## Testing & Validation
 
-- [x] Filters apply correctly based on distance and budget
-- [x] Foursquare API returns valid and relevant places
-- [x] Firebase Auth handles guest, register, and login flows
-- [x] Dashboard saves and renders user-specific data
-- [x] Frontend & backend communicate via Axios and routes
+- Filters apply correctly based on distance and budget
+- Foursquare API returns valid and relevant places
+- Firebase Auth handles guest, register, and login flows
+- Dashboard saves and renders user-specific data
+- Frontend & backend communicate via Axios and routes
 
 ---
 
-## 👥 Team
+## Team
 
 - **Aliyah Owens**  
 - **Tanishaa Singh**  
@@ -135,6 +135,6 @@ College-Compass/
 
 ---
 
-## 📌 License
+## License
 
 This project is for educational purposes only. © 2025 College Compass Team
