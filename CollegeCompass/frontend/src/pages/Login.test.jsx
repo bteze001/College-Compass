@@ -18,10 +18,10 @@ vi.mock('firebase/auth', async () => {
   const actual = await vi.importActual('firebase/auth');
   return {
     ...actual,
-    signInWithEmailAndPassword: vi.fn(() => Promise.resolve({ user: { uid: '123', email: 'test@edu.com' } })),
-    createUserWithEmailAndPassword: vi.fn(() => Promise.resolve({ user: { uid: '123' } })),
+    signInWithEmailAndPassword: vi.fn(() => Promise.resolve({ user: { uid: '12345', email: 'test@ucr.edu' } })),
+    createUserWithEmailAndPassword: vi.fn(() => Promise.resolve({ user: { uid: '12345' } })),
     updateProfile: vi.fn(() => Promise.resolve()),
-    signInAnonymously: vi.fn(() => Promise.resolve({ user: { uid: 'anon' } })),
+    signInAnonymously: vi.fn(() => Promise.resolve({ user: { uid: 'tester' } })),
   };
 });
 
@@ -30,7 +30,7 @@ describe('Login Page', () => {
     mockNavigate.mockClear();
   });
 
-    test('Renders login form with inputs and buttons', () => {
+    test('renders login form with inputs and buttons', () => {
     render(<Login />);
     expect(screen.getByRole('heading', { name: /login/i })).toBeInTheDocument();
 
@@ -46,14 +46,14 @@ describe('Login Page', () => {
   });
 
 
-  test('Switches to registration mode when clicking register toggle', () => {
+  test('switches to registration mode when clicking register toggle', () => {
     render(<Login />);
     fireEvent.click(screen.getByRole('button', { name: /new user\? register/i }));
     expect(screen.getByRole('heading', { name: /register/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /^register$/i })).toBeInTheDocument();
   });
 
-  test('Shows error when passwords do not match on register', async () => {
+  test('shows error when passwords do not match on register', async () => {
     render(<Login />);
     fireEvent.click(screen.getByRole('button', { name: /new user\? register/i }));
 
@@ -69,11 +69,11 @@ describe('Login Page', () => {
     expect(await screen.findByText(/passwords do not match/i)).toBeInTheDocument();
   });
 
-  test('Submits login credentials and navigates', async () => {
+  test('submits login credentials and navigates', async () => {
     render(<Login />);
 
     const inputs = screen.getAllByRole('textbox');
-    fireEvent.change(inputs[0], { target: { value: 'test@edu.com' } }); 
+    fireEvent.change(inputs[0], { target: { value: 'test@ucr.edu' } }); 
 
     const passwordFields = document.querySelectorAll('input[type="password"]');
     fireEvent.change(passwordFields[0], { target: { value: '123456' } });
@@ -81,13 +81,13 @@ describe('Login Page', () => {
     fireEvent.click(screen.getByRole('button', { name: /^login$/i }));
 
     await waitFor(() => {
-      expect(mockNavigate).toHaveBeenCalledWith('/homepage');
+      expect(mockNavigate).toHaveBeenCalledWith('/homepage', { state: undefined });
     });
   });
 
-  test('Allows guest login and navigates to homepage', async () => {
+  test('allows guest login and navigates to homepage', async () => {
     render(<Login />);
     fireEvent.click(screen.getByRole('button', { name: /continue as guest/i }));
-    expect(mockNavigate).toHaveBeenCalledWith('/homepage');
+    expect(mockNavigate).toHaveBeenCalledWith('/homepage', { state: undefined });
   });
 });

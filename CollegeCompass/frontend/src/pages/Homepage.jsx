@@ -183,9 +183,21 @@ export default function Homepage() {
                 })}>
               Log In
             </button>
-            <button className="sign-up-button" onClick={() => navigate('/signup')}>
-              Sign Up
-            </button>
+            <button
+                  className="sign-up-button"
+                  onClick={() =>
+                    navigate('/login?register=true', {
+                      state: {
+                        lat: currentLat,
+                        lng: currentLon,
+                        schoolName: schoolName,
+                      }
+                    })
+                  }
+                >
+                  Sign Up
+              </button>
+
             <button className="dashboard-button-2" onClick={handleDashboardClick}>
               Dashboard
             </button>
