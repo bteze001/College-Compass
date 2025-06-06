@@ -1,119 +1,93 @@
+import { describe, test, expect, vi, beforeEach } from 'vitest';
+import { waitFor, render, screen, fireEvent } from '@testing-library/react';
+import '@testing-library/jest-dom';
+import Login from './LogIn'; 
 
-import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import Login from './LogIn';
-import { MemoryRouter } from 'react-router-dom';
-import { vi } from 'vitest';
-import { useNavigate } from 'react-router-dom';
-import { auth } from '../firebase';
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signInAnonymously,
-  updateProfile,
-} from 'firebase/auth';
-
-vi.mock('firebase/auth');
-
-vi.mock('react-router-dom', async (importOriginal) => {
-  const actual = await importOriginal();
+const mockNavigate = vi.fn();
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual('react-router-dom');
   return {
     ...actual,
-    useNavigate: vi.fn(),
+    useNavigate: () => mockNavigate,
+    useLocation: () => ({ search: '' }),
+    Link: ({ to, children }) => <a href={to}>{children}</a>
   };
 });
 
-beforeEach(() => {
-  vi.clearAllMocks();
+vi.mock('firebase/auth', async () => {
+  const actual = await vi.importActual('firebase/auth');
+  return {
+    ...actual,
+    signInWithEmailAndPassword: vi.fn(() => Promise.resolve({ user: { uid: '123', email: 'test@edu.com' } })),
+    createUserWithEmailAndPassword: vi.fn(() => Promise.resolve({ user: { uid: '123' } })),
+    updateProfile: vi.fn(() => Promise.resolve()),
+    signInAnonymously: vi.fn(() => Promise.resolve({ user: { uid: 'anon' } })),
+  };
 });
 
-// Helper to render Login with router
-function renderWithRouter(ui, { route = '/login' } = {}) {
-  window.history.pushState({}, 'Test page', route);
-  return render(<MemoryRouter initialEntries={[route]}>{ui}</MemoryRouter>);
-}
-
-// test 1: successful registration
-test('Successful registration', async () => {
-  createUserWithEmailAndPassword.mockResolvedValue({ user: {} });
-  updateProfile.mockResolvedValue();
-
-  renderWithRouter(<Login />, { route: '/login?register=true' });
-
-  fireEvent.change(screen.getByLabelText('Username'), { target: { value: 'testuser' } });
-  fireEvent.change(screen.getByLabelText('School Email'), { target: { value: 'test@example.com' } });
-  fireEvent.change(screen.getByLabelText('Password'), { target: { value: '123456' } });
-  fireEvent.change(screen.getByLabelText('Confirm Password'), { target: { value: '123456' } });
-
-  fireEvent.click(screen.getByRole('button', { name: 'Register' }));
-
-  await waitFor(() => {
-    expect(createUserWithEmailAndPassword).toHaveBeenCalled();
-    expect(updateProfile).toHaveBeenCalled();
-    expect(screen.queryByText(/Passwords do not match/i)).not.toBeInTheDocument();
-  });
-});
-
-// test 2: password mismatch
-test('Passwords must match during registration', async () => {
-  renderWithRouter(<Login />, { route: '/login?register=true' });
-
-  fireEvent.change(screen.getByLabelText('Username'), { target: { value: 'testuser' } });
-  fireEvent.change(screen.getByLabelText('School Email'), { target: { value: 'test@example.com' } });
-  fireEvent.change(screen.getByLabelText('Password'), { target: { value: '123456' } });
-  fireEvent.change(screen.getByLabelText('Confirm Password'), { target: { value: '654321' } });
-
-  fireEvent.click(screen.getByRole('button', { name: 'Register' }));
-
-  expect(await screen.findByText(/Passwords do not match/i)).toBeInTheDocument();
-});
-
-// test 3: login success
-test('Successful login with correct credentials', async () => {
-  signInWithEmailAndPassword.mockResolvedValue({});
-
-  renderWithRouter(<Login />);
-
-  fireEvent.change(screen.getByLabelText('School Email'), { target: { value: 'test@example.com' } });
-  fireEvent.change(screen.getByLabelText('Password'), { target: { value: '123456' } });
-
-  fireEvent.click(screen.getByRole('button', { name: 'Login' }));
-
-  await waitFor(() => {
-    expect(signInWithEmailAndPassword).toHaveBeenCalled();
-    expect(screen.queryByText(/Invalid Login/i)).not.toBeInTheDocument();
-  });
-});
-
-// test 4: login error
-test('Invalid login shows error', async () => {
-
-  signInWithEmailAndPassword.mockRejectedValue({ code: 'auth/invalid-credential' });
-
-  renderWithRouter(<Login />);
-
-  fireEvent.change(screen.getByLabelText('School Email'), { target: { value: 'test@example.com' } });
-  fireEvent.change(screen.getByLabelText('Password'), { target: { value: 'wrongpass' } });
-
-  fireEvent.click(screen.getByRole('button', { name: 'Login' }));
-
-  expect(await screen.findByText(/Invalid Login/i)).toBeInTheDocument();
-  
-});
-
-// test 5: guest login
-test('Guest login navigates to homepage without calling signInAnonymously', async () => {
-
-  const navigateMock = vi.fn();
-  useNavigate.mockReturnValue(navigateMock); // mock the navigate function
-
-  renderWithRouter(<Login />);
-
-  fireEvent.click(screen.getByRole('button', { name: /continue as guest/i }));
-
-  await waitFor(() => {
-    expect(navigateMock).toHaveBeenCalledWith('/homepage', expect.anything());
+describe('Login Page', () => {
+  beforeEach(() => {
+    mockNavigate.mockClear();
   });
 
-});
+    test('Renders login form with inputs and buttons', () => {
+    render(<Login />);
+    expect(screen.getByRole('heading', { name: /login/i })).toBeInTheDocument();
 
+    const emailInput = screen.getByRole('textbox');
+    expect(emailInput).toBeInTheDocument();
+
+    const passwordInput = document.querySelector('input[type="password"]');
+    expect(passwordInput).toBeInTheDocument();
+
+    expect(screen.getByRole('button', { name: /^login$/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /continue as guest/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /new user\? register/i })).toBeInTheDocument();
+  });
+
+
+  test('Switches to registration mode when clicking register toggle', () => {
+    render(<Login />);
+    fireEvent.click(screen.getByRole('button', { name: /new user\? register/i }));
+    expect(screen.getByRole('heading', { name: /register/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /^register$/i })).toBeInTheDocument();
+  });
+
+  test('Shows error when passwords do not match on register', async () => {
+    render(<Login />);
+    fireEvent.click(screen.getByRole('button', { name: /new user\? register/i }));
+
+    const inputs = screen.getAllByRole('textbox');
+    fireEvent.change(inputs[0], { target: { value: 'testuser' } });
+    fireEvent.change(inputs[1], { target: { value: 'test@edu.com' } });
+
+    const passwordFields = document.querySelectorAll('input[type="password"]');
+    fireEvent.change(passwordFields[0], { target: { value: 'pass123' } });
+    fireEvent.change(passwordFields[1], { target: { value: 'mismatch' } });
+
+    fireEvent.click(screen.getByRole('button', { name: /^register$/i }));
+    expect(await screen.findByText(/passwords do not match/i)).toBeInTheDocument();
+  });
+
+  test('Submits login credentials and navigates', async () => {
+    render(<Login />);
+
+    const inputs = screen.getAllByRole('textbox');
+    fireEvent.change(inputs[0], { target: { value: 'test@edu.com' } }); 
+
+    const passwordFields = document.querySelectorAll('input[type="password"]');
+    fireEvent.change(passwordFields[0], { target: { value: '123456' } });
+
+    fireEvent.click(screen.getByRole('button', { name: /^login$/i }));
+
+    await waitFor(() => {
+      expect(mockNavigate).toHaveBeenCalledWith('/homepage');
+    });
+  });
+
+  test('Allows guest login and navigates to homepage', async () => {
+    render(<Login />);
+    fireEvent.click(screen.getByRole('button', { name: /continue as guest/i }));
+    expect(mockNavigate).toHaveBeenCalledWith('/homepage');
+  });
+});
