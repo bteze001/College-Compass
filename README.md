@@ -112,7 +112,7 @@ We wrote test cases using Vitest and React Testing Library to validate key funct
 - **Favorites & Filters** – Simulated heart toggles, subcategory filters, and slider controls.
 
 To run all tests and view coverage:  
-```bash
+bash
 npx vitest run --coverage
 npx vitest run --coverage src/pages/TopRated.test.jsx
 
