@@ -6,13 +6,18 @@
 
 ## Features
 
-- **Search by UC Campus** – Begin by selecting your UC school to personalize your experience.
-- **Authentication** – Sign up, log in, or continue as a guest via Firebase Auth.
-- **Dynamic Homepage** – View local spots for food, housing, and activities.
-- **Custom Filters** – Use sliders to adjust search radius and budget.
-- **Save Favorites** – Authenticated users can save and manage favorite places.
-- **Dashboard** – Access tabs for reviews, favorites, and settings.
-- **Foursquare API Integration** – Displays real-time details including name, price, photos, and distance.
+- **Search by UC Campus** – Begin by selecting your UC school to personalize your experience.  
+- **Authentication** – Sign up, log in, or continue as a guest via Firebase Auth.  
+- **Dynamic Homepage** – View places for food, housing, and activities.  
+- **Search Bar** – Search places by keyword within selected category.  
+- **Subcategory Filters** – Filter by options like “Coffee Shops,” “Off-Campus Housing,” or “Hiking.”  
+- **Budget & Distance Filters** – Use multi-range sliders to refine results.  
+- **Favorites** – Save and manage favorite places in your dashboard.  
+- **Ratings & Reviews** – Submit reviews with star ratings and comments.  
+- **Top Rated Section** – View trending and highest-rated locations.  
+- **Dashboard** – View your saved favorites, reviews, and edit your account info.  
+- **Directions** – Each place includes a Google Maps link.  
+- **Add New Places** – Users can suggest new businesses to be added.
 
 ---
 
@@ -22,107 +27,95 @@
 |-----------|---------|----------|------------------|
 | React     | Node.js | Firebase | Foursquare Places |
 
-**Additional Tools:**
+**Additional Tools:**  
 - **Design** – Figma, Lucidchart  
 - **Routing** – React Router  
 - **Auth** – Firebase Authentication  
-- **Styling** – CSS, Material UI
+- **Styling** – CSS, Material UI  
 
 ---
 
 ## System Architecture
 
-```
-Frontend (React)
-│
-├── UI Components
-│   ├── LandingPage.jsx
-│   ├── Homepage.jsx
-│   ├── Dashboard.jsx
-│   └── Login/Signup.jsx
-│
-├── Hooks
-│   ├── usePlacesFetcher.js
-│   └── useCurrentUser.js
-│
-Backend (Node.js + Axios)
-│
-└── Firebase
-    ├── Firestore Database
+Frontend (React)  
+│  
+├── UI Components  
+│   ├── LandingPage.jsx  
+│   ├── Homepage.jsx  
+│   ├── Dashboard.jsx  
+│   └── Login/Signup.jsx  
+│  
+├── Hooks  
+│   ├── usePlacesFetcher.js  
+│   └── useCurrentUser.js  
+│  
+Backend (Node.js + Axios)  
+│  
+└── Firebase  
+    ├── Firestore Database  
     └── Firebase Auth
-```
 
 ---
 
 ## Getting Started
 
-1. **Clone the repository**
+1. **Clone the repository**  
+git clone https://github.com/bteze001/College-Compass.git  
+cd College-Compass  
 
-```bash
-git clone https://github.com/bteze001/College-Compass.git
-cd College-Compass
-```
+2. **Navigate into the frontend directory**  
+cd frontend  
 
-2. **Navigate into the frontend directory**
+3. **Install dependencies**  
+npm install vitest@latest @vitest/coverage-v8@latest  
+npm install  
 
-```bash
-cd frontend
-```
-
-3. **Install dependencies**
-
-```bash
-npm install
-```
-
-4. **Set up environment variables**
-
-Create a `.env` file in the `frontend` directory and add your Foursquare API key:
-
-```
+4. **Set up environment variables**  
+Create a `.env` file in the `frontend` directory and add your Foursquare API key:  
 VITE_API_KEY=your_foursquare_api_key_here
-```
 
-5. **Run the app locally**
-
-```bash
-npm run dev
-```
-
-Then visit: `http://localhost:5173`
+5. **Run the app locally**  
+npm run dev  
+Then visit: http://localhost:5173
 
 ---
 
 ## Project Structure
 
-```bash
-College-Compass/
-├── backend/
-│   └── places.js
-├── frontend/
-│   ├── src/
-│   │   ├── pages/
-│   │   │   ├── Homepage.jsx
-│   │   │   ├── Login.jsx
-│   │   │   └── Dashboard.jsx
-│   │   ├── components/
-│   │   └── App.jsx
-│   └── public/
-├── firebase.js
+College-Compass/  
+├── backend/  
+│   └── places.js  
+├── frontend/  
+│   ├── src/  
+│   │   ├── pages/  
+│   │   │   ├── Homepage.jsx  
+│   │   │   ├── Login.jsx  
+│   │   │   └── Dashboard.jsx  
+│   │   ├── components/  
+│   │   └── App.jsx  
+│   └── public/  
+├── firebase.js  
 └── .env
-```
 
 ---
 
 ## Testing & Validation
 
-- Filters apply correctly based on distance and budget
-- Foursquare API returns valid and relevant places
-- Firebase Auth handles guest, register, and login flows
-- Dashboard saves and renders user-specific data
-- Frontend & backend communicate via Axios and routes
+We wrote test cases using Vitest and React Testing Library to validate key functionality across the app:
 
----
+- **Landing Page (SearchSchool)** – Tested school selection, navigation, and filtering input.  
+- **Top Rated Component** – Tested rendering top-rated places, clicking, and navigation.  
+- **Homepage** – Verified category filtering, search input behavior, and UI interactions.  
+- **Place Detail Page** – Tested review submission, display logic, and fallback UI.  
+- **Dashboard** – Checked tab switching, displaying user favorites/reviews.  
+- **Account Settings** – Verified profile info edits and form updates.  
+- **Favorites & Filters** – Simulated heart toggles, subcategory filters, and slider controls.
+
+To run all tests and view coverage:  
+```bash
+npx vitest run --coverage
+npx vitest run --coverage src/pages/TopRated.test.jsx
+
 
 ## Team
 
