@@ -71,7 +71,7 @@ npm install vitest@latest @vitest/coverage-v8@latest
 npm install  
 
 4. **Set up environment variables**  
-Create a `.env` file in the `frontend` directory and add your Foursquare API key:  
+Create a `.env` file in the `frontend` directory and add your Foursquare API key (Sign Up for an account and generate an api key with after clicking "create a new project":  
 VITE_API_KEY=your_foursquare_api_key_here
 
 5. **Run the app locally**  
