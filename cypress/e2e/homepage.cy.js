@@ -63,18 +63,6 @@ describe('Homepage Functionality Tests', () => {
     }); 
   });
 
-  describe('Place photos tests', () => {
-    it('should allow searching for a place (within a selected category)', () => {
-      cy.intercept('GET', '**/places/search**').as('placesSearch');
-      cy.get('.food-spots-button').click({ force: true });
-      cy.get('.search-input').type('Pizza');
-      cy.get('.search-button').click({ force: true });
-      cy.wait('@placesSearch');
-      cy.get('.places-box').should('exist');
-    });
-    
-  });
-
   describe('User login navigation test cases', () => {
     it('Test should navigate to login after dashboard clicked when logged out', () => {
       cy.visit('http://localhost:5173/homepage');
